@@ -1,0 +1,17 @@
+[DefCore]
+id=SCHL
+Name=Schleusen-Builder
+Category=3600
+MaxUserSelect=10
+Width=8
+Height=6
+Offset=-4,-3
+Value=60
+Mass=15
+Components=METL=5;WOOD=1;
+Picture=8,0,80,60
+Vertices=1
+VertexY=1
+VertexFriction=50
+Collectible=1
+ 

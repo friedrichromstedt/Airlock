@@ -1,0 +1,1 @@
+Breite: 80 px

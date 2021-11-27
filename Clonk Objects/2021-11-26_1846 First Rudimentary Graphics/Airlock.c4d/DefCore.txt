@@ -1,0 +1,10 @@
+[DefCore]
+
+id=ALCK
+Version=4,9,10
+Name=Luftschleuse
+Category=1026
+Width=173
+Height=22
+Offset=-86,-11
+Picture=0,0,173,26

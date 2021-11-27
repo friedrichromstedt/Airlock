@@ -1,0 +1,3 @@
+Errichtet sofort eine Schleuse an aktueller Position.
+Kostet ein Holz mehr als die Schleuse.
+
