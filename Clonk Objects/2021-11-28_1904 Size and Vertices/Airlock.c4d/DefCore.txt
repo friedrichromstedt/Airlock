@@ -7,12 +7,10 @@ Category=1026
 Width=173
 Height=22
 Offset=-86,-11
-Value=1000
-Mass=100
 Construction=1
+Mass=1000
 
 Picture=0,0,173,26
-TopFace=0,15,173,5
 
 Vertices=1
 VertexX=0

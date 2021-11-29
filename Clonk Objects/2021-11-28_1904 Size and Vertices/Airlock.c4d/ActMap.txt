@@ -2,6 +2,6 @@
 
 Name=Trivial
 Procedure=NONE
-Delay=1000
 Length=1
-FacetTopFace=1
+Delay=0
+Facet=0,0,10,10
