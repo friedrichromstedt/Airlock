@@ -12,7 +12,7 @@ Mass=100
 Construction=1
 
 Picture=0,0,173,26
-TopFace=2,2,173,22
+TopFace=0,15,173,5
 
 Vertices=1
 VertexX=0

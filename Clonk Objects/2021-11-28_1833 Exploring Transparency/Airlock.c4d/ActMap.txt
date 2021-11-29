@@ -1,0 +1,7 @@
+[Action]
+
+Name=Trivial
+Procedure=NONE
+Delay=1000
+Length=1
+Facet=0,2,173,22
