@@ -1,0 +1,3 @@
+func Initialize() {
+    SetAction("Trivial");
+}
