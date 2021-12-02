@@ -1,0 +1,14 @@
+[a02.png]:
+    First screen shot to check the location of the vertices.
+
+[a03.png]:
+    As [a02.png], with vertices.
+
+[b01.png]:
+    Correct results with ``Width=169``.
+
+[b02.png]:
+    Incorrect result with ``Width=171``.
+
+[b03.png, b04.png]:
+    Correct result with ``Width=171``.
