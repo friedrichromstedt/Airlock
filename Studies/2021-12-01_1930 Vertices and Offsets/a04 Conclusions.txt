@@ -1,0 +1,1 @@
+Vertices *penetrate* into the surface they are located on [a03].
