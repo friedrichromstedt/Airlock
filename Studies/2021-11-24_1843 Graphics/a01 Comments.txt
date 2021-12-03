@@ -1,0 +1,14 @@
+[g01]:
+    With facets for the SolidMask.
+
+[g02]:
+    Bugfixed Single Graphic:
+
+    1.  The Shield showed a non-symmetric pixel at the lower end -
+        corrected.
+
+    2.  The grey border of the vertical pipe was missing two pixels at the
+        upper left end.
+
+[g03]:
+    Marked a position with periodicity of 20 px.

@@ -1,0 +1,18 @@
+[a01]:
+    Drafted the periodicity to 10 phases, each 2 pixels wide.  I paid
+    attention that the vertical pipe is coloured correctly.
+
+    I used the bugfixed graphic [2021-11-24_1843/g02.psp].
+
+    Used green colour at brightness 0, 25, 50, ..., 200, 225 (10 points).
+
+    Mapping this ten points onto [0, 360) degrees will make it possible to
+    colour the pipe with a smooth scale of red (brightness 190 +- 50) when
+    using cos^2 or sin^2 of the corresponding angles 0, 36, 72, ..., 288,
+    324 (10 points, separated by 36 degrees).
+
+    The colours can be applied in the whole Graphics in one run by using
+    the colour replacer (that's why I coloured the phases green).
+
+    Maybe the pipe in the ceiling needs to be made more thick, 3 or 4
+    pixels instead of the momentary 2 pixels.
