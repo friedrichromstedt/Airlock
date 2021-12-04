@@ -16,3 +16,9 @@
 
     Maybe the pipe in the ceiling needs to be made more thick, 3 or 4
     pixels instead of the momentary 2 pixels.
+
+[b01]:
+    Adding two more pixels to the bend region at the top-centre.
+
+[b02-b07]:
+    Ticks 0-4 of the Pump-Left animation.
