@@ -28,3 +28,4 @@
 
 [c05]:
     Recreating, starting from [2021-11-24_1843/g01] (Bugfixed).
+    Added alpha channel.
