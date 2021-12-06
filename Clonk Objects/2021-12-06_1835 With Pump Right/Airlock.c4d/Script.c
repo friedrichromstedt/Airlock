@@ -1,3 +1,3 @@
 func Initialize() {
-    SetAction("PumpLeft");
+    SetAction("PumpRight");
 }
