@@ -1,0 +1,31 @@
+7 December 2021
+---------------
+
+[a01.bmp]:
+    Sample frame from the Heritage object showing all colours of the
+    Shield.
+
+[a02.psp]:
+    Applicaton of [a01.bmp] to the New Object.
+
+[a03.psp]:
+    The basic Graphic to use.
+
+[a04.psp, a05.psp]:
+    Drafts using only the screen (no notes on paper).
+
+
+8 December 2021
+---------------
+
+[b01.psp, b02.psp]:
+    Sectioning of the Left and the Right Shield.
+
+[b03.psp .. b10.psp]:
+    The frames of the opening animation for the left shield.
+
+[b11.psp]:
+    The Graphics with the left shield opening animation included.
+
+[b12.psp]:
+    PNG export of [b11.psp].
