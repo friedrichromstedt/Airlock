@@ -21,11 +21,24 @@
 [b01.psp, b02.psp]:
     Sectioning of the Left and the Right Shield.
 
-[b03.psp .. b10.psp]:
+[b03.psp .. b11.psp]:
     The frames of the opening animation for the left shield.
 
-[b11.psp]:
+[b12.psp]:
     The Graphics with the left shield opening animation included.
 
-[b12.psp]:
-    PNG export of [b11.psp].
+[b13.png]:
+    PNG export of [b12.psp].
+
+
+9 December 2021
+---------------
+
+[c01.psp .. c09.psp]:
+    The frames for the opening animation of the right shield.
+
+[c10.psp]:
+    The Graphics with also the right shield opening animation included.
+
+[c11.png]:
+    PNG export of [b10.psp].
