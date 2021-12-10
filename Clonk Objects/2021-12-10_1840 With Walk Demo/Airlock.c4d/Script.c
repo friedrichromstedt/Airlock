@@ -1,3 +1,3 @@
 func Initialize() {
-    SetAction("ShieldOpenLeft");
+    SetAction("ShieldOpenRight");
 }

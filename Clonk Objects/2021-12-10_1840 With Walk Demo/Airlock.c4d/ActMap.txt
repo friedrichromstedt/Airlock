@@ -24,3 +24,17 @@ Length=9
 Delay=5
 Facet=0,208,173,26,0,-2
 NextAction=ShieldOpenLeft
+
+[Action]
+Name=ShieldOpenRight
+Length=9
+Delay=5
+Facet=0,234,173,26,0,-2
+NextAction=ShieldOpenRight
+
+[Action]
+Name=WalkRight
+Length=20
+Delay=1
+Facet=0,260,173,26,0,-2
+NextAction=WalkRight
