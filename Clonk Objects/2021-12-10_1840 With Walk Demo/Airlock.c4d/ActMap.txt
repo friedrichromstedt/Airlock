@@ -35,6 +35,6 @@ NextAction=ShieldOpenRight
 [Action]
 Name=WalkRight
 Length=20
-Delay=1
+Delay=4
 Facet=0,260,173,26,0,-2
 NextAction=WalkRight

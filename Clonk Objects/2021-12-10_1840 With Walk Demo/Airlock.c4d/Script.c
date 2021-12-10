@@ -1,3 +1,3 @@
 func Initialize() {
-    SetAction("ShieldOpenRight");
+    SetAction("WalkRight");
 }
