@@ -1,0 +1,12 @@
+12 December 2021
+----------------
+
+[a02.psp]:
+    Identical to [2021-12-09_1843/b21.psp].
+
+[a03.psp]:
+    Added a Standard Frame at the beginning of the *Shield Open* Animations
+    (*left* and *right*) and to the present *Walk Right* Animation.
+
+[a04.png]:
+    Export of [a03.psp].
