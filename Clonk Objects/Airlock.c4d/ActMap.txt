@@ -1,8 +1,14 @@
 [Action]
-Name=Trivial
+Name=Idling
 Length=1
 Delay=0
 Facet=0,26,173,26,0,-2
+
+[Action]
+Name=Off
+Length=1
+Delay=0
+Facet=173,26,173,26,0,-2
 
 [Action]
 Name=PumpLeft
