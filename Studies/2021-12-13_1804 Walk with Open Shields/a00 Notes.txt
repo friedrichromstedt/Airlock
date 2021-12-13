@@ -1,0 +1,15 @@
+[a01.psp]:
+    Identical to [2021-12-12_1826/a01.psp].
+
+[a02.psp]:
+    Derived from [2021-12-12_1826/a03.psp].
+
+    *   Added another row, duplicating the Walk Right row.
+    *   Removed the left shield in the frist Walk Right row, and removed
+        the right shield in the second Walk Right row.
+
+    *   Added Dry Pumping animations, based on the ordinary Pump rows, but
+        this time with the shield opposite to the pumping target opened.
+
+[a03.png]:
+    PNG export of [a02.psp].
