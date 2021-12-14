@@ -13,3 +13,6 @@
 
 [a03.png]:
     PNG export of [a02.psp].
+
+[a04.png]:
+    Includes a frame with both shields down.

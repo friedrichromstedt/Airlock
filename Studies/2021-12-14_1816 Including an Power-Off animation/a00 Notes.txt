@@ -1,0 +1,14 @@
+14 December 2021
+----------------
+
+[a01.psp]:
+    Composed from [2021-12-06_1951/{b01, b02}.png].
+
+[a02.psp .. a11.psp]:
+    The power-off animation.
+
+[a11.psp]:
+    Based on [2021-12-13_1804/a02.psp].
+
+    Adding [a03.psp .. a11.psp] right to the Idle frame (skipping [a02.psp]
+    because it is the Idle frame which is already there).

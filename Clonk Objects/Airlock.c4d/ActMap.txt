@@ -5,10 +5,23 @@ Delay=0
 Facet=0,26,173,26,0,-2
 
 [Action]
+Name=PowerOff
+Length=10
+Delay=5
+Facet=0,26,173,26,0,-2
+
+[Action]
+Name=PowerOn
+Length=10
+Delay=5
+Facet=0,26,173,26,0,-2
+Reverse=1
+
+[Action]
 Name=Off
 Length=1
 Delay=0
-Facet=173,26,173,26,0,-2
+Facet=1384,26,173,26,0,-2
 
 
 
