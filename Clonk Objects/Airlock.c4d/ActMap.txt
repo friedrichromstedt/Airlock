@@ -16,12 +16,27 @@ Length=10
 Delay=5
 Facet=0,26,173,26,0,-2
 Reverse=1
+EndCall=PowerOnDone
 
 [Action]
 Name=Off
 Length=1
 Delay=0
 Facet=1384,26,173,26,0,-2
+
+
+
+[Action]
+Name=IdlingClosedLeft
+Length=1
+Delay=0
+Facet=0,364,173,26,0,-2
+
+[Action]
+Name=IdlingClosedRight
+Lengt=1
+Delay=0
+Facet=0,390,173,26,0,-2
 
 
 
@@ -85,6 +100,36 @@ Name=ShieldCloseRight
 Length=10
 Delay=5
 Facet=0,234,173,26,0,-2
+Reverse=1
+
+
+
+[Action]
+Name=ShieldOpenLeftII
+Length=10
+Delay=5
+Facet=0,364,173,26,0,-2
+
+[Action]
+Name=ShieldCloseLeftII
+Length=10
+Delay=5
+Facet=0,364,173,26,0,-2
+Reverse=1
+
+
+
+[Action]
+Name=ShieldOpenRightII
+Length=10
+Delay=5
+Facet=0,390,173,26,0,-2
+
+[Action]
+Name=ShieldCloseRightII
+Length=10
+Delay=5
+Facet=0,390,173,26,0,-2
 Reverse=1
 
 

@@ -15,3 +15,6 @@ Picture=0,26,173,26
 Vertices=6
 VertexX=-80,0,80,-80,0,80
 VertexY=-11,-11,-11,12,12,12
+
+TimerCall=Run
+Timer=1
