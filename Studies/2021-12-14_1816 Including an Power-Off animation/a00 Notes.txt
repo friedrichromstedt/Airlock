@@ -7,8 +7,19 @@
 [a02.psp .. a11.psp]:
     The power-off animation.
 
-[a11.psp]:
+[a12.psp]:
     Based on [2021-12-13_1804/a02.psp].
 
     Adding [a03.psp .. a11.psp] right to the Idle frame (skipping [a02.psp]
     because it is the Idle frame which is already there).
+
+[a13.png]:
+    Export of [a12.psp].
+
+
+17 December 2021
+----------------
+
+[a14.psp]:
+    [a12.psp] with a modified frame for the "construction state": removing
+    the shields.
