@@ -1,0 +1,9 @@
+17 December 2021
+----------------
+
+[a01.psp]:
+    [2021-12-14_1816/a14.psp], plus 2 rows for an opening animation of the
+    left/right shield while the other *is open*.
+
+[a02.png]:
+    Export of [a01.psp].
