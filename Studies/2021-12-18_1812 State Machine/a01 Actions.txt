@@ -1,0 +1,53 @@
+.. vim: syntax=rst
+
+.. rubric:: Saturday, 18 December 2021
+
+
+Infinite Actions:
+
+*   IdlingClosedBoth
+*   IdlingOpenedBoth
+*   IdlingClosedLeft
+*   IdlingclosedRight
+
+*   PumpLeftOut
+*   PumpLeftIn
+*   PumpRightOut
+*   PumpRightIn
+*   WalkRightOpenLeft
+*   WalkRightOpenRight
+*   WalkLeftOpenLeft
+*   WalkLeftOpenRight
+
+*   DryPumpingLeft
+*   DryPumpingRight
+
+
+Transitions:
+
+*   ShieldOpenBoth
+*   ShieldCloseBoth
+*   ShieldOpenLeft
+*   ShieldCloseLeft
+*   ShieldOpenRight
+*   ShieldCloseRight
+*   ShieldOpenLeftII
+*   ShieldCloseLeftII
+*   ShieldOpenRightII
+*   ShieldCloseRightII
+
+
+Aims:
+
+*   beClosed, beOpenLeft, beOpenRight, beOpen
+
+*   beForcedClosed, beForcedOpenLeft, beForcedOpenRight, beForcedOpen
+
+*   doTranfer
+
+*   doDryPumpingLeft, doDryPumpingRight
+
+
+The EndCall functions need to be present *from the beginning*.  Hoewever,
+as a first step it is sufficient to implement only the first block of Aims.
+For this, the first block of infinite Action suffices.
