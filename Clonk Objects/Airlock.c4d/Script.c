@@ -3,11 +3,10 @@
 local top, bottom, left, right;
 
 local aim;
-    local bePoweredOff;
     local beClosed, beOpenLeft, beOpenRight, beOpen,
-        beForcedOpenLeft, beForcedOpenRight, beForcedOpen;
+        beForcedClosed, beForcedOpenLeft, beForcedOpenRight, beForcedOpen;
     local doTransfer;
-    local doDryPumpLeft, doDryPumpRight;
+    local doDryPumpingLeft, doDryPumpingRight;
 
 func fillingDegree(int x) {
     if (GBackLiquid(x, top)) {
@@ -30,58 +29,178 @@ func getMaterial(int x) {
 
 func Run() {
     var current_action = GetAction();
-    if (current_action == "Off") {
-        if (aim == beClosed) {
-            SetAction("PowerOn");
-        } else if (aim == beOpenLeft) {
+    if (current_action == "IdlingOpenedBoth") {
+        if (aim == beForcedClosed) {
+            SetAction("ShieldCloseBoth");
+        } else if (aim == beForcedOpenLeft) {
             SetAction("ShieldCloseRightII");
-        } else if (aim == beOpenRight) {
+        } else if (aim == beForcedOpenRight) {
             SetAction("ShieldCloseLeftII");
+        } else if (aim == beForcedOpen) {
+            // nothing to do
         }
-    } else if (current_action == "Idling") {
-        if (aim == bePoweredOff) {
-            SetAction("PowerOff");
-        } else if (aim == beOpenLeft) {
+    } else if (current_action == "IdlingClosedBoth") {
+        if (aim == beForcedClosed) {
+            // alright
+        } else if (aim == beForcedOpenLeft) {
             SetAction("ShieldOpenLeft");
-        } else if (aim == beOpenRigth) {
+        } else if (aim == beForcedOpenRight) {
             SetAction("ShieldOpenRight");
-        } else if (aim == beOpen) {
-            SetAction("PowerOff");
+        } else if (aim == beForcedOpen) {
+            SetAction("ShieldOpenBoth");
         }
     } else if (current_action == "IdlingClosedLeft") {
-        if (aim == bePoweredOff) {
-            SetAction("ShieldOpenLeftII");
-        } else if (aim == beClosed) {
+        if (aim == beForcedClosed) {
             SetAction("ShieldCloseRight");
-        } else if (aim == beOpenLeft) {
+        } else if (aim == beForcedOpenLeft) {
             SetAction("ShieldCloseRight");
-        } else if (aim == beOpen) {
+        } else if (aim == beForcedOpenRight) {
+            // nothing to do
+        } else if (aim == beForcedOpen) {
             SetAction("ShieldOpenLeftII");
         }
     } else if (current_action == "IdlingClosedRight") {
-        if (aim == bePoweredOff) {
-            SetAction("ShieldOpenRightII");
-        } else if (aim == beClosed) {
+        if (aim == beForcedClosed) {
             SetAction("ShieldCloseLeft");
-        } else if (aim == beOpenRight) {
+        } else if (aim == beForcedOpenLeft) {
+            // nothing to do
+        } else if (aim == beForcedOpenRight) {
             SetAction("ShieldCloseLeft");
-        } else if (aim == beOpen) {
+        } else if (aim == beForcedOpen) {
             SetAction("ShieldOpenRightII");
         }
     }
 }
 
-func PowerOnDone() {
-    if (aim == bePoweredOff) {
-        SetAction("PowerOff");
-    } else if (aim == beClosed) {
-        SetAction("Idling");
-    } else if (aim == beOpenLeft) {
+func EndCallFunction() {
+    if (aim == beForcedClosed) {
+        SetAction("");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("");
+    } else if (aim == beForcedOpen) {
+        SetAction("");
+    }
+}
+
+func ShieldOpenBothDone() {
+    if (aim == beForcedClosed) {
+        SetAction("ShieldCloseBoth");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("ShieldCloseRightII");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("ShieldcloseLeftII");
+    } else if (aim == beForcedOpen) {
+        SetAction("IdlingOpenBoth");
+    }
+}
+
+func ShieldCloseBothDone() {
+    if (aim == beForcedClosed) {
+        SetAction("IdlingClosedBoth");
+    } else if (aim == beForcedOpenLeft) {
         SetAction("ShieldOpenLeft");
-    } else if (aim == beOpenRight) {
+    } else if (aim == beForcedOpenRight) {
         SetAction("ShieldOpenRight");
-    } else if (aim == beOpen) {
-        SetAction("PowerOff");
+    } else if (aim == beForcedOpen) {
+        SetAction("ShieldOpenBoth");
+    }
+}
+
+func ShieldOpenLeftDone() {
+    if (aim == beForcedClosed) {
+        SetAction("ShieldCloseLeft");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("IdlingClosedRight");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("ShieldCloseLeft");
+    } else if (aim == beForcedOpen) {
+        SetAction("ShieldOpenRightII");
+    }
+}
+
+func ShieldCloseLeftDone() {
+    if (aim == beForcedClosed) {
+        SetAction("IdlingClosedBoth");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("ShieldOpenLeft");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("ShieldOpenRight");
+    } else if (aim == beForcedOpen) {
+        SetAction("ShieldOpenBoth");
+    }
+}
+
+func ShieldOpenRightDone() {
+    if (aim == beForcedClosed) {
+        SetAction("ShieldCloseRight");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("ShieldCloseRight");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("IdlingClosedLeft");
+    } else if (aim == beForcedOpen) {
+        SetAction("ShieldOpenLeftII");
+    }
+}
+
+func ShieldCloseRightDone() {
+    if (aim == beForcedClosed) {
+        SetAction("IdlingClosedBoth");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("ShieldOpenLeft");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("ShieldOpenRight");
+    } else if (aim == beForcedOpen) {
+        SetAction("ShieldOpenBoth");
+    }
+}
+
+func ShieldOpenLeftIIDone() {
+    if (aim == beForcedClosed) {
+        SetAction("ShieldCloseBoth");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("ShieldCloseRightII");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("ShieldCloseLeftII");
+    } else if (aim == beForcedOpen) {
+        SetAction("IdlingOpenBoth");
+    }
+}
+
+func ShieldCloseLeftIIDone() {
+    if (aim == beForcedClosed) {
+        SetAction("ShieldCloseRight");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("ShieldCloseRight");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("IdlingClosedLeft");
+    } else if (aim == beForcedOpen) {
+        SetAction("ShieldOpenLeftII");
+    }
+}
+
+func ShieldOpenRightIIDone() {
+    if (aim == beForcedClosed) {
+        SetAction("ShieldCloseBoth");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("ShieldCloseRightII");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("ShieldCloseLeftII");
+    } else if (aim == beForcedOpen) {
+        SetAction("IdlingOpenBoth");
+    }
+}
+
+func ShieldCloseRightIIDone() {
+    if (aim == beForcedClosed) {
+        SetAction("ShieldCloseLeft");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("IdlingClosedRight");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("ShieldCloseLeft");
+    } else if (aim == beForcedOpen) {
+        SetAction("ShieldOpenRightII");
     }
 }
 
@@ -91,18 +210,18 @@ func Initialize() {
     left = -80;
     right = 80;
 
-    bePoweredOff = 0;
     beClosed = 1;
     beOpenLeft = 2;
     beOpenRight = 3;
     beOpen = 4;
     doTransfer = 5;
-    doDryPumpLeft = 6;
-    doDryPumpRight = 7;
+    doDryPumpingLeft = 6;
+    doDryPumpingRight = 7;
+    beForcedClosed = 11;
     beForcedOpenLeft = 8;
     beForcedOpenRight = 9;
     beForcedOpen = 10;
 
-    SetAction("Off");
-    aim = bePoweredOff;
+    SetAction("IdlingOpenBoth");
+    aim = beForcedOpen;
 }
