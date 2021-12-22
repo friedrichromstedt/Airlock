@@ -8,7 +8,7 @@ Facet=0,26,173,26,0,-2
 Name=IdlingOpenedBoth
 Length=1
 Delay=0
-Facet=1384,26,173,26,0,-2
+Facet=1557,26,173,26,0,-2
 
 [Action]
 Name=IdlingClosedLeft
