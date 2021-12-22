@@ -229,5 +229,5 @@ protected func Initialize() {
 }
 
 protected func ControlLeft(object pCaller) {
-    Message("Foobar", pCaller);
+    CreateMenu(ALCK, pCaller, 0, 0, "Linke Seite");
 }
