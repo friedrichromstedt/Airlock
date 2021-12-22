@@ -8,7 +8,7 @@ local aim;
     local doTransfer;
     local doDryPumpingLeft, doDryPumpingRight;
 
-func fillingDegree(int x) {
+private func fillingDegree(int x) {
     if (GBackLiquid(x, top)) {
         return(2);
     } else if (GBackLiquid(x, bottom)) {
@@ -18,7 +18,7 @@ func fillingDegree(int x) {
     }
 }
 
-func getMaterial(int x) {
+private func getMaterial(int x) {
     if (GBackLiquid(x, top)) {
         return(GetMaterial(x, top));
     } else if (GBackLiquid(x, bottom)) {
@@ -27,7 +27,7 @@ func getMaterial(int x) {
     return(-1);
 }
 
-func Run() {
+protected func Run() {
     var current_action = GetAction();
     if (current_action == "IdlingOpenedBoth") {
         if (aim == beForcedClosed) {
@@ -73,7 +73,7 @@ func Run() {
 }
 
 /*
-func EndCallFunction() {
+protected func EndCallFunction() {
     if (aim == beForcedClosed) {
         SetAction("");
     } else if (aim == beForcedOpenLeft) {
@@ -86,7 +86,7 @@ func EndCallFunction() {
 }
 */
 
-func ShieldOpenBothDone() {
+protected func ShieldOpenBothDone() {
     if (aim == beForcedClosed) {
         SetAction("ShieldCloseBoth");
     } else if (aim == beForcedOpenLeft) {
@@ -98,7 +98,7 @@ func ShieldOpenBothDone() {
     }
 }
 
-func ShieldCloseBothDone() {
+protected func ShieldCloseBothDone() {
     if (aim == beForcedClosed) {
         SetAction("IdlingClosedBoth");
     } else if (aim == beForcedOpenLeft) {
@@ -110,7 +110,7 @@ func ShieldCloseBothDone() {
     }
 }
 
-func ShieldOpenLeftDone() {
+protected func ShieldOpenLeftDone() {
     if (aim == beForcedClosed) {
         SetAction("ShieldCloseLeft");
     } else if (aim == beForcedOpenLeft) {
@@ -122,7 +122,7 @@ func ShieldOpenLeftDone() {
     }
 }
 
-func ShieldCloseLeftDone() {
+protected func ShieldCloseLeftDone() {
     if (aim == beForcedClosed) {
         SetAction("IdlingClosedBoth");
     } else if (aim == beForcedOpenLeft) {
@@ -134,7 +134,7 @@ func ShieldCloseLeftDone() {
     }
 }
 
-func ShieldOpenRightDone() {
+protected func ShieldOpenRightDone() {
     if (aim == beForcedClosed) {
         SetAction("ShieldCloseRight");
     } else if (aim == beForcedOpenLeft) {
@@ -146,7 +146,7 @@ func ShieldOpenRightDone() {
     }
 }
 
-func ShieldCloseRightDone() {
+protected func ShieldCloseRightDone() {
     if (aim == beForcedClosed) {
         SetAction("IdlingClosedBoth");
     } else if (aim == beForcedOpenLeft) {
@@ -158,7 +158,7 @@ func ShieldCloseRightDone() {
     }
 }
 
-func ShieldOpenLeftIIDone() {
+protected func ShieldOpenLeftIIDone() {
     if (aim == beForcedClosed) {
         SetAction("ShieldCloseBoth");
     } else if (aim == beForcedOpenLeft) {
@@ -170,7 +170,7 @@ func ShieldOpenLeftIIDone() {
     }
 }
 
-func ShieldCloseLeftIIDone() {
+protected func ShieldCloseLeftIIDone() {
     if (aim == beForcedClosed) {
         SetAction("ShieldCloseRight");
     } else if (aim == beForcedOpenLeft) {
@@ -182,7 +182,7 @@ func ShieldCloseLeftIIDone() {
     }
 }
 
-func ShieldOpenRightIIDone() {
+protected func ShieldOpenRightIIDone() {
     if (aim == beForcedClosed) {
         SetAction("ShieldCloseBoth");
     } else if (aim == beForcedOpenLeft) {
@@ -194,7 +194,7 @@ func ShieldOpenRightIIDone() {
     }
 }
 
-func ShieldCloseRightIIDone() {
+protected func ShieldCloseRightIIDone() {
     if (aim == beForcedClosed) {
         SetAction("ShieldCloseLeft");
     } else if (aim == beForcedOpenLeft) {
@@ -206,7 +206,7 @@ func ShieldCloseRightIIDone() {
     }
 }
 
-func Initialize() {
+protected func Initialize() {
     top = -10;
     bottom = 11;
     left = -80;
@@ -226,4 +226,8 @@ func Initialize() {
 
     SetAction("IdlingOpenedBoth");
     aim = beForcedOpen;
+}
+
+protected func ControlLeft(object pCaller) {
+    Message("Foobar", pCaller);
 }
