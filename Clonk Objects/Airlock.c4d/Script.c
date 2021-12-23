@@ -228,6 +228,30 @@ protected func Initialize() {
     aim = beForcedOpen;
 }
 
+protected func SetAim(id idItem, int newAim) {
+    aim = newAim;
+}
+
 protected func ControlLeft(object pCaller) {
-    CreateMenu(ALCK, pCaller, 0, 0, "Linke Seite");
+    CreateMenu(ALCK, pCaller, 0, 0, "Linke Seite oeffnen");
+    AddMenuItem("Forciert oeffnen", "SetAim", ALCK, pCaller,
+        0, beForcedOpenLeft);
+}
+
+protected func ControlRight(object pCaller) {
+    CreateMenu(ALCK, pCaller, 0, 0, "Rechte Seite oeffnen");
+    AddMenuItem("Forciert oeffnen", "SetAim", ALCK, pCaller,
+        0, beForcedOpenRight);
+}
+
+protected func ControlUp(object pCaller) {
+    CreateMenu(ALCK, pCaller, 0, 0, "Beide Seiten oeffnen");
+    AddMenuItem("Forciert oeffnen", "SetAim", ALCK, pCaller,
+        0, beForcedOpen);
+}
+
+protected func ControlDown(object pCaller) {
+    CreateMenu(ALCK, pCaller, 0, 0, "Beide Seiten schliessen");
+    AddMenuItem("Forciert schliessen", "SetAim", ALCK, pCaller,
+        0, beForcedClosed);
 }
