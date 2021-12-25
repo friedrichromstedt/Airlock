@@ -8,6 +8,9 @@ local aim;
     local doTransfer;
     local doDryPumpingLeft, doDryPumpingRight;
 
+local mode;
+    local cautious, forced, transfer, drypumping;
+
 private func fillingDegree(int x) {
     if (GBackLiquid(x, top)) {
         return(2);
@@ -224,45 +227,60 @@ protected func Initialize() {
     beForcedOpenRight = 9;
     beForcedOpen = 10;
 
+    cautious = 1;
+    forced = 2;
+    transfer = 3;
+    drypumping = 4;
+
     SetAction("IdlingOpenedBoth");
     aim = beForcedOpen;
-}
-
-protected func SetAim(id idItem, int newAim) {
-    aim = newAim;
+    mode = forced;
 }
 
 protected func ControlLeft(object pCaller) {
     CreateMenu(ALCK, pCaller, 0, 0, "Linke Seite");
-    AddMenuItem("Oeffnen", "ControlOpenLeft", ALCK, pCaller);
+    if (mode == forced) {
+        AddMenuItem("Links offen", "ControlOpenLeft", ALCK, pCaller);
+        AddMenuItem("Links geschlossen", "ControlCloseLeft", ALCK, pCaller);
+    }
+}
+
+protected func ControlRight(object pCaller) {
+    CreateMenu(ALCK, pCaller, 0, 0, "Rechte Seite");
+    if (mode == forced) {
+        AddMenuItem("Rechts offen", "ControlOpenRight", ALCK, pCaller);
+        AddMenuItem("Rechts geschlossen", "ControlCloseRight", ALCK, pCaller);
+    }
 }
 
 protected func ControlOpenLeft() {
     if (aim == beForcedClosed) {
         aim = beForcedOpenLeft;
-    } else if (aim == beForcedOpenLeft) {
-        // nothing to do
     } else if (aim == beForcedOpenRight) {
         aim = beForcedOpen;
-    } else if (aim == beForcedOpen) {
-        // nothing to do
     }
 }
 
-protected func ControlRight(object pCaller) {
-    CreateMenu(ALCK, pCaller, 0, 0, "Rechte Seite oeffnen");
-    AddMenuItem("Forciert oeffnen", "SetAim", ALCK, pCaller,
-        0, beForcedOpenRight);
+protected func ControlCloseLeft() {
+    if (aim == beForcedOpenLeft) {
+        aim = beForcedClosed;
+    } else if (aim == beForcedOpen) {
+        aim = beForcedOpenRight;
+    }
 }
 
-protected func ControlUp(object pCaller) {
-    CreateMenu(ALCK, pCaller, 0, 0, "Beide Seiten oeffnen");
-    AddMenuItem("Forciert oeffnen", "SetAim", ALCK, pCaller,
-        0, beForcedOpen);
+protected func ControlOpenRight() {
+    if (aim == beForcedClosed) {
+        aim = beForcedOpenRight;
+    } else if (aim == beForcedOpenLeft) {
+        aim = beForcedOpen;
+    }
 }
 
-protected func ControlDown(object pCaller) {
-    CreateMenu(ALCK, pCaller, 0, 0, "Beide Seiten schliessen");
-    AddMenuItem("Forciert schliessen", "SetAim", ALCK, pCaller,
-        0, beForcedClosed);
+protected func ControlCloseRight() {
+    if (aim == beForcedOpenRight) {
+        aim = beForcedClosed;
+    } else if (aim == beForcedOpen) {
+        aim = beForcedOpenLeft;
+    }
 }
