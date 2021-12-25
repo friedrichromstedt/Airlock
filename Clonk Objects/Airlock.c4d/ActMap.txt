@@ -3,25 +3,28 @@ Name=IdlingClosedBoth
 Length=1
 Delay=0
 Facet=0,26,173,26,0,-2
+StartCall=SolidMaskClosedBoth
 
 [Action]
 Name=IdlingOpenedBoth
 Length=1
 Delay=0
 Facet=1557,26,173,26,0,-2
+StartCall=SolidMaskOpenedBoth
 
 [Action]
 Name=IdlingClosedLeft
 Length=1
 Delay=0
 Facet=0,364,173,26,0,-2
+StartCall=SolidMaskClosedLeft
 
 [Action]
 Name=IdlingClosedRight
 Length=1
 Delay=0
 Facet=0,390,173,26,0,-2
-
+StartCall=SolidMaskClosedRight
 
 
 

@@ -284,3 +284,19 @@ protected func ControlCloseRight() {
         aim = beForcedOpenLeft;
     }
 }
+
+protected func SolidMaskClosedBoth() {
+    SetSolidMask(0, 52, 173, 26, 0, -2);
+}
+
+protected func SolidMaskOpenedBoth() {
+    SetSolidMask(0, 130, 173, 26, 0, -2);
+}
+
+protected func SolidMaskClosedLeft() {
+    SetSolidMask(0, 78, 173, 26, 0, -2);
+}
+
+protected func SolidMaskClosedRight() {
+    SetSolidMask(0, 104, 173, 26, 0, -2);
+}
