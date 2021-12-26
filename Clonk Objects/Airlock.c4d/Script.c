@@ -32,46 +32,57 @@ private func getMaterial(int x) {
 
 protected func Run() {
     var current_action = GetAction();
-    if (current_action == "IdlingOpenedBoth") {
-        if (aim == beForcedClosed) {
-            SetAction("ShieldCloseBoth");
-        } else if (aim == beForcedOpenLeft) {
-            SetAction("ShieldCloseRightII");
-        } else if (aim == beForcedOpenRight) {
-            SetAction("ShieldCloseLeftII");
-        } else if (aim == beForcedOpen) {
-            // nothing to do
-        }
-    } else if (current_action == "IdlingClosedBoth") {
-        if (aim == beForcedClosed) {
-            // nothing to do
-        } else if (aim == beForcedOpenLeft) {
-            SetAction("ShieldOpenLeft");
-        } else if (aim == beForcedOpenRight) {
-            SetAction("ShieldOpenRight");
-        } else if (aim == beForcedOpen) {
-            SetAction("ShieldOpenBoth");
-        }
-    } else if (current_action == "IdlingClosedLeft") {
-        if (aim == beForcedClosed) {
-            SetAction("ShieldCloseRight");
-        } else if (aim == beForcedOpenLeft) {
-            SetAction("ShieldCloseRight");
-        } else if (aim == beForcedOpenRight) {
-            // nothing to do
-        } else if (aim == beForcedOpen) {
-            SetAction("ShieldOpenLeftII");
-        }
-    } else if (current_action == "IdlingClosedRight") {
-        if (aim == beForcedClosed) {
-            SetAction("ShieldCloseLeft");
-        } else if (aim == beForcedOpenLeft) {
-            // nothing to do
-        } else if (aim == beForcedOpenRight) {
-            SetAction("ShieldCloseLeft");
-        } else if (aim == beForcedOpen) {
-            SetAction("ShieldOpenRightII");
-        }
+    if (current_action == "IdlingOpenedBoth") { RunOpenedBoth(); }
+    else if (current_action == "IdlingClosedBoth") { RunClosedBoth(); }
+    else if (current_action == "IdlingClosedLeft") { RunClosedLeft(); }
+    else if (current_action == "IdlingClosedRight") { RunClosedRight(); }
+}
+
+private func RunOpenedBoth() {
+    if (aim == beForcedClosed) {
+        SetAction("ShieldCloseBoth");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("ShieldCloseRightII");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("ShieldCloseLeftII");
+    } else if (aim == beForcedOpen) {
+        // nothing to do
+    }
+}
+
+private func RunClosedBoth() {
+    if (aim == beForcedClosed) {
+        // nothing to do
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("ShieldOpenLeft");
+    } else if (aim == beForcedOpenRight) {
+        SetAction("ShieldOpenRight");
+    } else if (aim == beForcedOpen) {
+        SetAction("ShieldOpenBoth");
+    }
+}
+
+private func RunClosedLeft() {
+    if (aim == beForcedClosed) {
+        SetAction("ShieldCloseRight");
+    } else if (aim == beForcedOpenLeft) {
+        SetAction("ShieldCloseRight");
+    } else if (aim == beForcedOpenRight) {
+        // nothing to do
+    } else if (aim == beForcedOpen) {
+        SetAction("ShieldOpenLeftII");
+    }
+}
+
+private func RunClosedRight() {
+    if (aim == beForcedClosed) {
+        SetAction("ShieldCloseLeft");
+    } else if (aim == beForcedOpenLeft) {
+        // nothing to do
+    } else if (aim == beForcedOpenRight) {
+        SetAction("ShieldCloseLeft");
+    } else if (aim == beForcedOpen) {
+        SetAction("ShieldOpenRightII");
     }
 }
 
