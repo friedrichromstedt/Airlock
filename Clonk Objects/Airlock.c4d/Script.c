@@ -129,7 +129,7 @@ protected func Initialize() {
 }
 
 protected func ControlLeft(object pCaller) {
-    CreateMenu(ALCK, pCaller, 0, 0, "Linke Seite");
+    CreateMenu(ALCK, pCaller, 0, 0, "Linke Seite", 0, 1);
     if (mode == forced) {
         AddMenuItem("Links offen", "ControlOpenLeft", ALCK, pCaller);
         AddMenuItem("Links geschlossen", "ControlCloseLeft", ALCK, pCaller);
@@ -137,7 +137,7 @@ protected func ControlLeft(object pCaller) {
 }
 
 protected func ControlRight(object pCaller) {
-    CreateMenu(ALCK, pCaller, 0, 0, "Rechte Seite");
+    CreateMenu(ALCK, pCaller, 0, 0, "Rechte Seite", 0, 1);
     if (mode == forced) {
         AddMenuItem("Rechts offen", "ControlOpenRight", ALCK, pCaller);
         AddMenuItem("Rechts geschlossen", "ControlCloseRight", ALCK, pCaller);
