@@ -144,6 +144,14 @@ protected func ControlRight(object pCaller) {
     }
 }
 
+protected func ControlUp(object pCaller) {
+    CreateMenu(ALCK, pCaller, 0, 0, "Beide Seiten", 0, 1);
+    if (mode == forced) {
+        AddMenuItem("Beide Seiten offen", "ControlOpenBoth", ALCK, pCaller);
+        AddMenuItem("Beide Seiten geschlossen", "ControlCloseBoth", ALCK, pCaller);
+    }
+}
+
 protected func ControlOpenLeft() {
     if (aim == beForcedClosed) {
         aim = beForcedOpenLeft;
@@ -174,6 +182,14 @@ protected func ControlCloseRight() {
     } else if (aim == beForcedOpen) {
         aim = beForcedOpenLeft;
     }
+}
+
+protected func ControlOpenBoth() {
+    if (mode == forced) { aim = beForcedOpen; }
+}
+
+protected func ControlCloseBoth() {
+    if (mode == forced) { aim = beForcedClosed; }
 }
 
 protected func SolidMaskClosedBoth() {
