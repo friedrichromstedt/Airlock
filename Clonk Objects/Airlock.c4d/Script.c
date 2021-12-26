@@ -44,7 +44,7 @@ protected func Run() {
         }
     } else if (current_action == "IdlingClosedBoth") {
         if (aim == beForcedClosed) {
-            // alright
+            // nothing to do
         } else if (aim == beForcedOpenLeft) {
             SetAction("ShieldOpenLeft");
         } else if (aim == beForcedOpenRight) {
@@ -88,126 +88,6 @@ protected func EndCallFunction() {
     }
 }
 */
-
-protected func ShieldOpenBothDone() {
-    if (aim == beForcedClosed) {
-        SetAction("ShieldCloseBoth");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("ShieldCloseRightII");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("ShieldcloseLeftII");
-    } else if (aim == beForcedOpen) {
-        SetAction("IdlingOpenedBoth");
-    }
-}
-
-protected func ShieldCloseBothDone() {
-    if (aim == beForcedClosed) {
-        SetAction("IdlingClosedBoth");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("ShieldOpenLeft");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("ShieldOpenRight");
-    } else if (aim == beForcedOpen) {
-        SetAction("ShieldOpenBoth");
-    }
-}
-
-protected func ShieldOpenLeftDone() {
-    if (aim == beForcedClosed) {
-        SetAction("ShieldCloseLeft");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("IdlingClosedRight");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("ShieldCloseLeft");
-    } else if (aim == beForcedOpen) {
-        SetAction("ShieldOpenRightII");
-    }
-}
-
-protected func ShieldCloseLeftDone() {
-    if (aim == beForcedClosed) {
-        SetAction("IdlingClosedBoth");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("ShieldOpenLeft");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("ShieldOpenRight");
-    } else if (aim == beForcedOpen) {
-        SetAction("ShieldOpenBoth");
-    }
-}
-
-protected func ShieldOpenRightDone() {
-    if (aim == beForcedClosed) {
-        SetAction("ShieldCloseRight");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("ShieldCloseRight");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("IdlingClosedLeft");
-    } else if (aim == beForcedOpen) {
-        SetAction("ShieldOpenLeftII");
-    }
-}
-
-protected func ShieldCloseRightDone() {
-    if (aim == beForcedClosed) {
-        SetAction("IdlingClosedBoth");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("ShieldOpenLeft");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("ShieldOpenRight");
-    } else if (aim == beForcedOpen) {
-        SetAction("ShieldOpenBoth");
-    }
-}
-
-protected func ShieldOpenLeftIIDone() {
-    if (aim == beForcedClosed) {
-        SetAction("ShieldCloseBoth");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("ShieldCloseRightII");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("ShieldCloseLeftII");
-    } else if (aim == beForcedOpen) {
-        SetAction("IdlingOpenedBoth");
-    }
-}
-
-protected func ShieldCloseLeftIIDone() {
-    if (aim == beForcedClosed) {
-        SetAction("ShieldCloseRight");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("ShieldCloseRight");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("IdlingClosedLeft");
-    } else if (aim == beForcedOpen) {
-        SetAction("ShieldOpenLeftII");
-    }
-}
-
-protected func ShieldOpenRightIIDone() {
-    if (aim == beForcedClosed) {
-        SetAction("ShieldCloseBoth");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("ShieldCloseRightII");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("ShieldCloseLeftII");
-    } else if (aim == beForcedOpen) {
-        SetAction("IdlingOpenedBoth");
-    }
-}
-
-protected func ShieldCloseRightIIDone() {
-    if (aim == beForcedClosed) {
-        SetAction("ShieldCloseLeft");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("IdlingClosedRight");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("ShieldCloseLeft");
-    } else if (aim == beForcedOpen) {
-        SetAction("ShieldOpenRightII");
-    }
-}
 
 protected func Initialize() {
     top = -10;

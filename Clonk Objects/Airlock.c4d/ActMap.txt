@@ -67,7 +67,7 @@ Name=ShieldOpenBoth
 Length=10
 Delay=5
 Facet=0,26,173,26,0,-2
-EndCall=ShieldOpenBothDone
+NextAction=IdlingOpenedBoth
 
 [Action]
 Name=ShieldCloseBoth
@@ -75,7 +75,8 @@ Length=10
 Delay=5
 Facet=0,26,173,26,0,-2
 Reverse=1
-EndCall=ShieldCloseBothDone
+NextAction=IdlingClosedBoth
+
 
 
 [Action]
@@ -83,7 +84,7 @@ Name=ShieldOpenLeft
 Length=10
 Delay=5
 Facet=0,208,173,26,0,-2
-EndCall=ShieldOpenLeftDone
+NextAction=IdlingClosedRight
 
 [Action]
 Name=ShieldCloseLeft
@@ -91,7 +92,7 @@ Length=10
 Delay=5
 Facet=0,208,173,26,0,-2
 Reverse=1
-EndCall=ShieldCloseLeftDone
+NextAction=IdlingClosedBoth
 
 
 
@@ -100,7 +101,7 @@ Name=ShieldOpenRight
 Length=10
 Delay=5
 Facet=0,234,173,26,0,-2
-EndCall=ShieldOpenRightDone
+NextAction=IdlingClosedLeft
 
 [Action]
 Name=ShieldCloseRight
@@ -108,7 +109,7 @@ Length=10
 Delay=5
 Facet=0,234,173,26,0,-2
 Reverse=1
-EndCall=ShieldCloseRightDone
+NextAction=IdlingClosedBoth
 
 
 
@@ -117,7 +118,7 @@ Name=ShieldOpenLeftII
 Length=10
 Delay=5
 Facet=0,364,173,26,0,-2
-EndCall=ShieldOpenLeftIIDone
+NextAction=IdlingOpenedBoth
 
 [Action]
 Name=ShieldCloseLeftII
@@ -125,7 +126,7 @@ Length=10
 Delay=5
 Facet=0,364,173,26,0,-2
 Reverse=1
-EndCall=ShieldCloseLeftIIDone
+NextAction=IdlingClosedLeft
 
 
 
@@ -134,7 +135,7 @@ Name=ShieldOpenRightII
 Length=10
 Delay=5
 Facet=0,390,173,26,0,-2
-EndCall=ShieldOpenRightIIDone
+NextAction=IdlingOpenedBoth
 
 [Action]
 Name=ShieldCloseRightII
@@ -142,7 +143,7 @@ Length=10
 Delay=5
 Facet=0,390,173,26,0,-2
 Reverse=1
-EndCall=ShieldCloseRightIIDone
+NextAction=IdlingClosedRight
 
 
 
