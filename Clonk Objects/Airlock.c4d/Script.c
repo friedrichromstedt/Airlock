@@ -1,11 +1,10 @@
 #strict 2
 
-local top, bottom, left, right;
+local top, bottom, left, right, centre;
 
 local aim;
     local beClosed, beOpenLeft, beOpenRight, beOpen,
         beForcedClosed, beForcedOpenLeft, beForcedOpenRight, beForcedOpen;
-    local doTransfer;
     local doDryPumpingLeft, doDryPumpingRight;
 
 local mode;
@@ -39,6 +38,13 @@ protected func Run() {
 }
 
 private func RunOpenedBoth() {
+    if (aim == beClosed) {
+        SetAction("ShieldCloseBoth");
+    } else if (aim == beOpenLeft) {
+    } else if (aim == beOpenRight) {
+    } else if (aim == beOpen) {
+    }
+
     if (aim == beForcedClosed) {
         SetAction("ShieldCloseBoth");
     } else if (aim == beForcedOpenLeft) {
@@ -105,6 +111,7 @@ protected func Initialize() {
     bottom = 11;
     left = -80;
     right = 80;
+    centre = 0;
 
     beClosed = 1;
     beOpenLeft = 2;
@@ -152,6 +159,14 @@ protected func ControlUp(object pCaller) {
     }
 }
 
+protected func ControlDig(object pCaller) {
+    CreateMenu(ALCK, pCaller, 0, 0, "Betriebsmodus", 0, 1);
+    AddMenuItem("Vorsichtig", "ControlModeCautious", ALCK, pCaller);
+    AddMenuItem("Forciert", "ControlModeForced", ALCK, pCaller);
+    // AddMenuItem("Transfer", "ControlModeTransfer", ALCK, pCaller);
+    // AddMenuItem("Trockenpumpen", "ControlModeDrypumping", ALCK, pCaller);
+}
+
 protected func ControlOpenLeft() {
     if (aim == beForcedClosed) {
         aim = beForcedOpenLeft;
@@ -190,6 +205,30 @@ protected func ControlOpenBoth() {
 
 protected func ControlCloseBoth() {
     if (mode == forced) { aim = beForcedClosed; }
+}
+
+protected func ControlModeCautious() {
+    if (mode == forced) {
+        if (aim == byForcedClosed) { aim = beClosed; }
+        else if (aim == beForcedOpenLeft) { aim = beOpenLeft; }
+        else if (aim == beForcedOpenRight) { aim = beOpenRight; }
+        else if (aim == beForcedOpen) { aim = beOpen; }
+    } else if (mode == transfer) {
+    } else if (mode == drypumping) {
+    }
+    mode = cautious;
+}
+
+protected func ControlModeForced() {
+    if (mode == cautious) {
+        if (aim == beClosed) { aim = beForcedOpen; }
+        else if (aim == beOpenLeft) { aim = beForcedOpenLeft; }
+        else if (aim == beOpenRight) { aim = beForcedOpenRight; }
+        else if (aim == beOpen) { aim = beForcedOpen; }
+    } else if (mode == transfer) {
+    } else if (mode == drypumping) {
+    }
+    mode = forced;
 }
 
 protected func SolidMaskClosedBoth() {
