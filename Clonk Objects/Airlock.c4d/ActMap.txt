@@ -33,6 +33,7 @@ Name=PumpLeftOut
 Length=10
 Delay=1
 Facet=0,156,173,26,0,-2
+PhaseCall=RunPumpLeftOut
 NextAction=PumpLeftOut
 
 [Action]
@@ -41,6 +42,7 @@ Length=10
 Delay=1
 Facet=0,156,173,26,0,-2
 Reverse=1
+PhaseCall=RunPumpLeftIn
 NextAction=PumpLeftIn
 
 
@@ -50,6 +52,7 @@ Name=PumpRightOut
 Length=10
 Delay=1
 Facet=0,182,173,26,0,-2
+PhaseCall=RunPumpRightOut
 NextAction=PumpRightOut
 
 [Action]
@@ -58,6 +61,7 @@ Length=10
 Delay=1
 Facet=0,182,173,26,0,-2
 Reverse=1
+PhaseCall=RunPumpRightIn
 NextAction=PumpRightIn
 
 

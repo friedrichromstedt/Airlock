@@ -29,6 +29,18 @@ private func getMaterial(int x) {
     return(-1);
 }
 
+private func RequestOpenBoth(string action, int alt_aim) {
+    if (fillingDegree(left) > 0 && fillingDegree(right) > 0) {
+        SetAction(action);
+    } else if (fillingDegree(left) == 0 and fillingDegree(right) == 0 &&
+               fillingDegree(centre) == 0) {
+        SetAction(action);
+    } else {
+        Messsage("Kann nicht beide Seiten zugleich oeffnen");
+        aim = alt_aim;
+    }
+}
+
 protected func Run() {
     var current_action = GetAction();
     if (current_action == "IdlingOpenedBoth") { RunOpenedBoth(); }
@@ -41,8 +53,11 @@ private func RunOpenedBoth() {
     if (aim == beClosed) {
         SetAction("ShieldCloseBoth");
     } else if (aim == beOpenLeft) {
+        SetAction("ShieldCloseRightII");
     } else if (aim == beOpenRight) {
+        SetAction("ShieldCloseLeftII");
     } else if (aim == beOpen) {
+        // nothing to do
     }
 
     if (aim == beForcedClosed) {
@@ -57,6 +72,49 @@ private func RunOpenedBoth() {
 }
 
 private func RunClosedBoth() {
+    if (aim == beClosed) {
+        // nothing to do
+    } else if (aim == beOpenLeft) {
+        /* This is equivalent but more long.
+        if (fillingDegree(left) > 0) {
+            SetAction("ShieldOpenLeft");
+        } else if (fillingDegree(centre) > 0) {
+            if (fillingDegree(right) > 0) {
+                SetAction("PumpRightOut");
+            else {
+                Message("Beide Seiten sind trocken");
+                aim = beClosed;
+            }
+        } else {
+            SetAction("ShieldOpenLeft");
+        }
+        */
+        if (fillingDegree(centre) == 0 || fillingDegree(left) > 0) {
+            SetAction("ShieldOpenLeft");
+        } else {
+            // We have liquid inside and a dry left side.
+            if (fillingDegree(right) > 0) {
+                SetAction("PumpRightOut");
+            } else {
+                Message("Beide Seiten sind trocken");
+                aim = beClosed;
+            }
+        }
+    } else if (aim == beOpenRight) {
+        if (fillingDegree(centre) == 0 || fillingDegree(right) > 0) {
+            SetAction("ShieldOpenRight");
+        } else {
+            if (fillingDegree(left) > 0) {
+                SetAction("PumpLeftOut");
+            } else {
+                Message("Beide Seiten sind trocken");
+                aim = beClosed;
+            }
+        }
+    } else if (aim == beOpen) {
+        RequestOpenBoth("ShieldOpenBoth", beClosed);
+    }
+
     if (aim == beForcedClosed) {
         // nothing to do
     } else if (aim == beForcedOpenLeft) {
@@ -69,6 +127,16 @@ private func RunClosedBoth() {
 }
 
 private func RunClosedLeft() {
+    if (aim == beClosed) {
+        SetAction("ShieldCloseRight");
+    } else if (aim == beOpenLeft) {
+        SetAction("ShieldCloseRight"); // the first step
+    } else if (aim == beOpenRight) {
+        // nothing to do
+    } else if (aim == beOpen) {
+        RequestOpenBoth("ShieldOpenLeftII", beClosedLeft);
+    }
+
     if (aim == beForcedClosed) {
         SetAction("ShieldCloseRight");
     } else if (aim == beForcedOpenLeft) {
@@ -81,6 +149,16 @@ private func RunClosedLeft() {
 }
 
 private func RunClosedRight() {
+    if (aim == beClosed) {
+        SetAction("ShieldCloseLeft");
+    } else if (aim == beOpenLeft) {
+        // nothing to do
+    } else if (aim == beOpenRight) {
+        SetAction("ShieldCloseLeft"); // the first step
+    } else if (aim == beOpen) {
+        RequestOpenBoth("ShieldOpenRightII", beClosedRight);
+    }
+
     if (aim == beForcedClosed) {
         SetAction("ShieldCloseLeft");
     } else if (aim == beForcedOpenLeft) {
@@ -117,7 +195,6 @@ protected func Initialize() {
     beOpenLeft = 2;
     beOpenRight = 3;
     beOpen = 4;
-    doTransfer = 5;
     doDryPumpingLeft = 6;
     doDryPumpingRight = 7;
     beForcedClosed = 11;
