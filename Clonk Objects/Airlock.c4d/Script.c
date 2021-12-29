@@ -32,11 +32,11 @@ private func getMaterial(int x) {
 private func RequestOpenBoth(string action, int alt_aim) {
     if (fillingDegree(left) > 0 && fillingDegree(right) > 0) {
         SetAction(action);
-    } else if (fillingDegree(left) == 0 and fillingDegree(right) == 0 &&
+    } else if (fillingDegree(left) == 0 && fillingDegree(right) == 0 &&
                fillingDegree(centre) == 0) {
         SetAction(action);
     } else {
-        Messsage("Kann nicht beide Seiten zugleich oeffnen");
+        Message("Kann nicht beide Seiten zugleich oeffnen");
         aim = alt_aim;
     }
 }
@@ -134,7 +134,7 @@ private func RunClosedLeft() {
     } else if (aim == beOpenRight) {
         // nothing to do
     } else if (aim == beOpen) {
-        RequestOpenBoth("ShieldOpenLeftII", beClosedLeft);
+        RequestOpenBoth("ShieldOpenLeftII", beOpenRight);
     }
 
     if (aim == beForcedClosed) {
@@ -156,7 +156,7 @@ private func RunClosedRight() {
     } else if (aim == beOpenRight) {
         SetAction("ShieldCloseLeft"); // the first step
     } else if (aim == beOpen) {
-        RequestOpenBoth("ShieldOpenRightII", beClosedRight);
+        RequestOpenBoth("ShieldOpenRightII", beOpenLeft);
     }
 
     if (aim == beForcedClosed) {
@@ -169,6 +169,57 @@ private func RunClosedRight() {
         SetAction("ShieldOpenRightII");
     }
 }
+
+protected func RunPumpLeftOut() {
+    if (aim == beClosed) {
+        SetAction("IdlingClosedBoth");
+    } else if (aim == beOpenLeft) {
+        SetAction("ShieldOpenLeft");
+    } else if (aim == beOpenRight) {
+        if (fillingDegree(centre) == 0) {
+            SetAction("ShieldOpenRight");
+        } else {
+            for (var i = 0; i < 20; i++) {
+                var material = ExtractLiquid(centre, bottom);
+                if (material != -1) {
+                    InsertMaterial(material, left, top);
+                }
+            }
+        }
+    } else if (aim == beOpen) {
+        RequestOpenBoth("ShieldOpenBoth", beClosed);
+    }
+
+    if (mode == forced) {
+        SetAction("IdlingClosedBoth");
+    }
+}
+
+protected func RunPumpRightOut() {
+    if (aim == beClosed) {
+        SetAction("IdlingClosedBoth");
+    } else if (aim == beOpenLeft) {
+        if (fillingDegree(centre) == 0) {
+            SetAction("ShieldOpenLeft");
+        } else {
+            for (var i = 0; i < 20; i++) {
+                var material = ExtractLiquid(centre, bottom);
+                if (material != -1) {
+                    InsertMaterial(material, right, top);
+                }
+            }
+        }
+    } else if (aim == beOpen) {
+        RequestOpenBoth("ShieldOpenBoth", beClosed);
+    }
+
+    if (mode == forced) {
+        SetAction("IdlingClosedBoth");
+    }
+}
+
+protected func RunPumpLeftIn() { }
+protected func RunPumpRightIn() { }
 
 /*
 protected func EndCallFunction() {
@@ -208,13 +259,13 @@ protected func Initialize() {
     drypumping = 4;
 
     SetAction("IdlingOpenedBoth");
-    aim = beForcedOpen;
-    mode = forced;
+    aim = beOpen;
+    mode = cautious;
 }
 
 protected func ControlLeft(object pCaller) {
     CreateMenu(ALCK, pCaller, 0, 0, "Linke Seite", 0, 1);
-    if (mode == forced) {
+    if (mode == forced || mode == cautious) {
         AddMenuItem("Links offen", "ControlOpenLeft", ALCK, pCaller);
         AddMenuItem("Links geschlossen", "ControlCloseLeft", ALCK, pCaller);
     }
@@ -222,7 +273,7 @@ protected func ControlLeft(object pCaller) {
 
 protected func ControlRight(object pCaller) {
     CreateMenu(ALCK, pCaller, 0, 0, "Rechte Seite", 0, 1);
-    if (mode == forced) {
+    if (mode == forced || mode == cautious) {
         AddMenuItem("Rechts offen", "ControlOpenRight", ALCK, pCaller);
         AddMenuItem("Rechts geschlossen", "ControlCloseRight", ALCK, pCaller);
     }
@@ -230,7 +281,7 @@ protected func ControlRight(object pCaller) {
 
 protected func ControlUp(object pCaller) {
     CreateMenu(ALCK, pCaller, 0, 0, "Beide Seiten", 0, 1);
-    if (mode == forced) {
+    if (mode == forced || mode == cautious) {
         AddMenuItem("Beide Seiten offen", "ControlOpenBoth", ALCK, pCaller);
         AddMenuItem("Beide Seiten geschlossen", "ControlCloseBoth", ALCK, pCaller);
     }
@@ -245,6 +296,12 @@ protected func ControlDig(object pCaller) {
 }
 
 protected func ControlOpenLeft() {
+    if (aim == beClosed) {
+        aim = beOpenLeft;
+    } else if (aim == beOpenRight) {
+        aim = beOpen;
+    }
+
     if (aim == beForcedClosed) {
         aim = beForcedOpenLeft;
     } else if (aim == beForcedOpenRight) {
@@ -253,6 +310,12 @@ protected func ControlOpenLeft() {
 }
 
 protected func ControlCloseLeft() {
+    if (aim == beOpenLeft) {
+        aim = beClosed;
+    } else if (aim == beOpen) {
+        aim = beOpenRight;
+    }
+
     if (aim == beForcedOpenLeft) {
         aim = beForcedClosed;
     } else if (aim == beForcedOpen) {
@@ -261,6 +324,12 @@ protected func ControlCloseLeft() {
 }
 
 protected func ControlOpenRight() {
+    if (aim == beClosed) {
+        aim = beOpenRight;
+    } else if (aim == beOpenLeft) {
+        aim = beOpen;
+    }
+
     if (aim == beForcedClosed) {
         aim = beForcedOpenRight;
     } else if (aim == beForcedOpenLeft) {
@@ -269,6 +338,12 @@ protected func ControlOpenRight() {
 }
 
 protected func ControlCloseRight() {
+    if (aim == beOpenRight) {
+        aim = beClosed;
+    } else if (aim == beOpen) {
+        aim = beOpenLeft;
+    }
+
     if (aim == beForcedOpenRight) {
         aim = beForcedClosed;
     } else if (aim == beForcedOpen) {
@@ -277,16 +352,18 @@ protected func ControlCloseRight() {
 }
 
 protected func ControlOpenBoth() {
+    if (mode == cautious) { aim = beOpen; }
     if (mode == forced) { aim = beForcedOpen; }
 }
 
 protected func ControlCloseBoth() {
+    if (mode == cautious) { aim = beClosed; }
     if (mode == forced) { aim = beForcedClosed; }
 }
 
 protected func ControlModeCautious() {
     if (mode == forced) {
-        if (aim == byForcedClosed) { aim = beClosed; }
+        if (aim == beForcedClosed) { aim = beClosed; }
         else if (aim == beForcedOpenLeft) { aim = beOpenLeft; }
         else if (aim == beForcedOpenRight) { aim = beOpenRight; }
         else if (aim == beForcedOpen) { aim = beOpen; }
