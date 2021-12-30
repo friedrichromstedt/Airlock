@@ -156,6 +156,7 @@ Name=WalkRightOpenLeft
 Length=21
 Delay=2
 Facet=0,260,173,26,0,-2
+PhaseCall=RunWalkRightOpenLeft
 NextAction=WalkRightOpenLeft
 
 [Action]
@@ -163,6 +164,7 @@ Name=WalkRightOpenRight
 Length=21
 Delay=2
 Facet=0,286,173,26,0,-2
+PhaseCall=RunWalkRightOpenRight
 NextAction=WalkRightOpenRight
 
 
@@ -173,6 +175,7 @@ Length=21
 Delay=2
 Facet=0,260,173,26,0,-2
 Reverse=1
+PhaseCall=RunWalkLeftOpenLeft
 NextAction=WalkLeftOpenLeft
 
 [Action]
@@ -181,6 +184,7 @@ Length=21
 Delay=2
 Facet=0,286,173,26,0,-2
 Reverse=1
+PhaseCall=RunWalkLeftOpenRight
 NextAction=WalkLeftOpenRight
 
 

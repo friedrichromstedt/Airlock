@@ -1,10 +1,15 @@
 #strict 2
 
-local top, bottom, left, right, centre;
+local top, bottom, left, right, centre, height;
+
+local centreROIx, centreROIwidth;
+local leftROIx, leftROIwidth;
+local rightROIx, rightROIwidth;
 
 local aim;
     local beClosed, beOpenLeft, beOpenRight, beOpen,
         beForcedClosed, beForcedOpenLeft, beForcedOpenRight, beForcedOpen;
+    local doTransferRight, doTransferLeft;
     local doDryPumpingLeft, doDryPumpingRight;
 
 local mode;
@@ -27,6 +32,25 @@ private func getMaterial(int x) {
         return(GetMaterial(x, bottom));
     }
     return(-1);
+}
+
+private func CountLeft() {
+    return ObjectCount2(
+        Find_InRect(leftROIx, top, leftROIwidth, height),
+        Find_OCF(OCF_CrewMember),
+    );
+}
+private func CountCentre() {
+    return ObjectCount2(
+        Find_InRect(centreROIx, top, centreROIwidth, height),
+        Find_OCF(OCF_CrewMember),
+    );
+}
+private func CountRight() {
+    return ObjectCount2(
+        Find_InRect(rightROIx, top, rightROIwidth, height),
+        Find_OCF(OCF_CrewMember),
+    );
 }
 
 private func RequestOpenBoth(string action, int alt_aim) {
@@ -221,6 +245,11 @@ protected func RunPumpRightOut() {
 protected func RunPumpLeftIn() { }
 protected func RunPumpRightIn() { }
 
+protected func RunWalkRightOpenLeft() { }
+protected func RunWalkRightOpenRight() { }
+protected func RunWalkLeftOpenLeft() { }
+protected func RunWalkLeftOpenRight() { }
+
 /*
 protected func EndCallFunction() {
     if (aim == beForcedClosed) {
@@ -241,17 +270,31 @@ protected func Initialize() {
     left = -80;
     right = 80;
     centre = 0;
+    height = 22;
+
+    centreROIx = -78;
+    centreROIwidth = 157;
+    leftROIx = -227;
+    leftROIwidth = 160;
+    rightROIx = 67;
+    rightROIwidth = 160;
 
     beClosed = 1;
     beOpenLeft = 2;
     beOpenRight = 3;
     beOpen = 4;
+
     doDryPumpingLeft = 6;
     doDryPumpingRight = 7;
+
     beForcedClosed = 11;
     beForcedOpenLeft = 8;
     beForcedOpenRight = 9;
     beForcedOpen = 10;
+
+    doTransferRight = 11;
+    doTransferLeft = 12;
+    // beOpen and beClosed can be used here as well.
 
     cautious = 1;
     forced = 2;
