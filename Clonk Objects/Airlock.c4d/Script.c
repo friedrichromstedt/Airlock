@@ -9,7 +9,7 @@ local rightROIx, rightROIwidth;
 local aim;
     local beClosed, beOpenLeft, beOpenRight, beOpen,
         beForcedClosed, beForcedOpenLeft, beForcedOpenRight, beForcedOpen;
-    local doTransferRight, doTransferLeft;
+    local waitForTransfer, doTransferRight, doTransferLeft;
     local doDryPumpingLeft, doDryPumpingRight;
 
 local mode;
@@ -93,48 +93,66 @@ private func RunOpenedBoth() {
     } else if (aim == beForcedOpen) {
         // nothing to do
     }
+
+    if (aim == waitForTransfer) {
+        if (CountCentre() == 0) {
+            if (CountRight() > 0 && CountLeft() == 0) {
+                aim = doTransferRight;
+            } else if (CountLeft() > 0 && CountRight() == 0) {
+                aim = doTransferLeft;
+            } else {
+                SetAction("ShieldCloseBoth");
+            }
+        }
+    } else if (aim == doTransferRight) {
+        if (CountCentre() > 0) {
+            SetAction("ShieldCloseLeftII");
+        } else {
+            SetAction("ShieldCloseBoth");
+        }
+    } else if (aim == doTransferLeft) {
+        if (CountCentre() > 0) {
+            SetAction("ShieldCloseRightII");
+        } else {
+            SetAction("ShieldCloseBoth");
+        }
+    }
+}
+
+private func AttemptShieldOpenLeft() {
+    if (fillingDegree(centre) == 0 || fillingDegree(left) > 0) {
+        SetAction("ShieldOpenLeft");
+    } else {
+        // We have liquid inside and a dry left side.
+        if (fillingDegree(right) > 0) {
+            SetAction("PumpRightOut");
+        } else {
+            Message("Beide Seiten sind trocken");
+            aim = beClosed;
+        }
+    }
+}
+
+private func AttemptShieldOpenRight() {
+    if (fillingDegree(centre) == 0 || fillingDegree(right) > 0) {
+        SetAction("ShieldOpenRight");
+    } else {
+        if (fillingDegree(left) > 0) {
+            SetAction("PumpLeftOut");
+        } else {
+            Message("Beide Seiten sind trocken");
+            aim = beClosed;
+        }
+    }
 }
 
 private func RunClosedBoth() {
     if (aim == beClosed) {
         // nothing to do
     } else if (aim == beOpenLeft) {
-        /* This is equivalent but more long.
-        if (fillingDegree(left) > 0) {
-            SetAction("ShieldOpenLeft");
-        } else if (fillingDegree(centre) > 0) {
-            if (fillingDegree(right) > 0) {
-                SetAction("PumpRightOut");
-            else {
-                Message("Beide Seiten sind trocken");
-                aim = beClosed;
-            }
-        } else {
-            SetAction("ShieldOpenLeft");
-        }
-        */
-        if (fillingDegree(centre) == 0 || fillingDegree(left) > 0) {
-            SetAction("ShieldOpenLeft");
-        } else {
-            // We have liquid inside and a dry left side.
-            if (fillingDegree(right) > 0) {
-                SetAction("PumpRightOut");
-            } else {
-                Message("Beide Seiten sind trocken");
-                aim = beClosed;
-            }
-        }
+        AttemptShieldOpenLeft();
     } else if (aim == beOpenRight) {
-        if (fillingDegree(centre) == 0 || fillingDegree(right) > 0) {
-            SetAction("ShieldOpenRight");
-        } else {
-            if (fillingDegree(left) > 0) {
-                SetAction("PumpLeftOut");
-            } else {
-                Message("Beide Seiten sind trocken");
-                aim = beClosed;
-            }
-        }
+        AttemptShieldOpenRight();
     } else if (aim == beOpen) {
         RequestOpenBoth("ShieldOpenBoth", beClosed);
     }
@@ -147,6 +165,32 @@ private func RunClosedBoth() {
         SetAction("ShieldOpenRight");
     } else if (aim == beForcedOpen) {
         SetAction("ShieldOpenBoth");
+    }
+
+    if (aim == waitForTransfer) {
+        if (CountLeft() > 0 && CountRight() == 0) {
+            AttemptShieldOpenLeft();
+        } else if (CountRight() > 0 && CountLeft() == 0) {
+            AttemptShieldOpenRight();
+        }
+    } else if (aim == doTransferRight) {
+        if (CountLeft() > 0) {
+            AttemptShieldOpenLeft();
+        } else if (CountCentre() > 0) {
+            AttemptShieldOpenRight();
+        } else if (CountRight() == 0) {
+            // Finish doTransferRight
+            aim = waitForTransfer;
+        }
+    } else if (aim == doTransferLeft) {
+        if (CountRight() > 0) {
+            AttemptShieldOpenRight();
+        } else if (CountCentre() > 0) {
+            AttemptShieldOpenLeft();
+        } else if (CountLeft() == 0) {
+            // finish doTransferLeft
+            aim = waitForTransfer;
+        }
     }
 }
 
@@ -170,6 +214,30 @@ private func RunClosedLeft() {
     } else if (aim == beForcedOpen) {
         SetAction("ShieldOpenLeftII");
     }
+
+    if (aim == waitForTransfer) {
+        if (CountRight() > 0 && CountLeft() == 0) {
+            aim = doTransferLeft;
+        } else if (CountLeft() > 0 && CountRight() == 0) {
+            SetAction("ShieldCloseRight"); // first step
+        }
+    } else if (aim == doTransferLeft) {
+        if (CountRight() > 0) {
+            SetAction("WalkLeftOpenRight");
+        } else if (CountCentre() > 0) {
+            SetAction("ShieldCloseRight");
+        } else {
+            aim = waitForTransfer;
+        }
+    } else if (aim == doTransferRight) {
+        if (CountCentre() > 0) {
+            SetAction("WalkRightOpenRight");
+        else if (CountRight() > 0) {
+            SetAction("ShieldCloseRight");
+        } else {
+            aim = waitForTransfer;
+        }
+    }
 }
 
 private func RunClosedRight() {
@@ -191,6 +259,30 @@ private func RunClosedRight() {
         SetAction("ShieldCloseLeft");
     } else if (aim == beForcedOpen) {
         SetAction("ShieldOpenRightII");
+    }
+
+    if (aim == waitForTransfer) {
+        if (CountLeft() > 0 && CountRight() == 0) {
+            aim = doTransferRight;
+        } else if (CountRight() > 0 && CountLeft() == 0) {
+            SetAction("ShieldCloseLeft"); // first step
+        }
+    } else if (aim == doTransferRight) {
+        if (CountLeft() > 0) {
+            SetAction("WalkRightOpenLeft");
+        } else if (CountCentre() > 0) {
+            SetAction("ShieldCloseLeft");
+        } else {
+            aim = waitForTransfer;
+        }
+    } else if (aim == doTransferLeft) {
+        if (CountCentre() > 0) {
+            SetAction("WalkLeftOpenLeft");
+        } else if (CountLeft() > 0) {
+            SetAction("ShieldCloseLeft");
+        } else {
+            aim = waitForTransfer;
+        }
     }
 }
 
@@ -292,9 +384,9 @@ protected func Initialize() {
     beForcedOpenRight = 9;
     beForcedOpen = 10;
 
-    doTransferRight = 11;
+    doTransferRight = 14;
     doTransferLeft = 12;
-    // beOpen and beClosed can be used here as well.
+    waitForTransfer = 13;
 
     cautious = 1;
     forced = 2;
@@ -302,8 +394,8 @@ protected func Initialize() {
     drypumping = 4;
 
     SetAction("IdlingOpenedBoth");
-    aim = beOpen;
-    mode = cautious;
+    aim = waitForTransfer;
+    mode = transfer;
 }
 
 protected func ControlLeft(object pCaller) {
