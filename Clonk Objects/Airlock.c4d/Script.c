@@ -67,6 +67,7 @@ private func RequestOpenBoth(string action, int alt_aim) {
 
 protected func Run() {
     var current_action = GetAction();
+
     if (current_action == "IdlingOpenedBoth") { RunOpenedBoth(); }
     else if (current_action == "IdlingClosedBoth") { RunClosedBoth(); }
     else if (current_action == "IdlingClosedLeft") { RunClosedLeft(); }
@@ -95,10 +96,14 @@ private func RunOpenedBoth() {
     }
 
     if (aim == waitForTransfer) {
+        // In OpenedBoth state, we wait for the clonk/s which built the
+        // AirLock to exit on one of the two sides.
         if (CountCentre() == 0) {
             if (CountRight() > 0 && CountLeft() == 0) {
+                // Let the clonks exit to the right.
                 aim = doTransferRight;
             } else if (CountLeft() > 0 && CountRight() == 0) {
+                // Let the clonks exit to the left.
                 aim = doTransferLeft;
             } else {
                 SetAction("ShieldCloseBoth");
@@ -106,14 +111,18 @@ private func RunOpenedBoth() {
         }
     } else if (aim == doTransferRight) {
         if (CountCentre() > 0) {
+            // Aim set manually.
             SetAction("ShieldCloseLeftII");
         } else {
+            // The builder/s exited.
             SetAction("ShieldCloseBoth");
         }
     } else if (aim == doTransferLeft) {
         if (CountCentre() > 0) {
+            // Aim set manually.
             SetAction("ShieldCloseRightII");
         } else {
+            // The builder/s exited.
             SetAction("ShieldCloseBoth");
         }
     }
@@ -232,7 +241,7 @@ private func RunClosedLeft() {
     } else if (aim == doTransferRight) {
         if (CountCentre() > 0) {
             SetAction("WalkRightOpenRight");
-        else if (CountRight() > 0) {
+        } else if (CountRight() > 0) {
             SetAction("ShieldCloseRight");
         } else {
             aim = waitForTransfer;
@@ -337,10 +346,18 @@ protected func RunPumpRightOut() {
 protected func RunPumpLeftIn() { }
 protected func RunPumpRightIn() { }
 
-protected func RunWalkRightOpenLeft() { }
-protected func RunWalkRightOpenRight() { }
-protected func RunWalkLeftOpenLeft() { }
-protected func RunWalkLeftOpenRight() { }
+protected func RunWalkRightOpenLeft() {
+    if (CountLeft() == 0) { SetAction("IdlingClosedRight"); }
+}
+protected func RunWalkRightOpenRight() {
+    if (CountCentre() == 0) { SetAction("IdlingClosedLeft"); }
+}
+protected func RunWalkLeftOpenLeft() {
+    if (CountCentre() == 0 ) { SetAction("IdlingClosedRight"); }
+}
+protected func RunWalkLeftOpenRight() {
+    if (CountRight() == 0) { SetAction("IdlingClosedLeft"); }
+}
 
 /*
 protected func EndCallFunction() {
