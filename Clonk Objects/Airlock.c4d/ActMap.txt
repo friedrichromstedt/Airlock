@@ -202,3 +202,11 @@ Length=10
 Delay=1
 Facet=0,338,173,26,0,-2
 NextAction=DryPumpingRight
+
+
+[Action]
+Name=Waiting
+Length=1
+Delay=100
+Facet=0,26,173,26,0,-2
+EndCall=Resume
