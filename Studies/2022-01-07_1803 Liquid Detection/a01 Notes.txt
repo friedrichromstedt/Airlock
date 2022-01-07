@@ -1,0 +1,10 @@
+Leftmost point of floor (right edge of the left shield)::
+
+    18 px
+
+Rightmost point ot floor (left egde of the right shield)::
+
+    154 px
+
+The floor is hence (154 - 18 + 1) px = 137 px wide.  Its maximum offset x
+coordinates are hence +- (137 - 1) / 2 = +- 68 px.
