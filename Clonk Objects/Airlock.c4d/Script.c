@@ -11,7 +11,8 @@ local maxFloorXOffset;
 local aim;
     local beClosed, beOpenLeft, beOpenRight, beOpen,
         beForcedClosed, beForcedOpenLeft, beForcedOpenRight, beForcedOpen;
-    local waitForTransfer, doTransferRight, doTransferLeft;
+    local waitForTransfer,
+        enterFromLeft, exitToRight, enterFromRight, exitToLeft;
     local doDryPumpingLeft, doDryPumpingRight;
 
 local mode;
@@ -133,36 +134,33 @@ private func RunOpenedBoth() {
         // nothing to do
     }
 
+    // in transfer mode, we need to leave the OpenedBoth state.
     if (aim == waitForTransfer) {
         // In OpenedBoth state, we wait for the clonk/s which built the
         // AirLock to exit on one of the two sides.
         if (CountCentre() == 0) {
             if (CountRight() > 0 && CountLeft() == 0) {
                 // Let the clonks exit to the right.
-                aim = doTransferRight;
+                aim = exitToRight;
             } else if (CountLeft() > 0 && CountRight() == 0) {
                 // Let the clonks exit to the left.
-                aim = doTransferLeft;
+                aim = exitToLeft;
             } else {
                 SetAction("ShieldCloseBoth");
             }
         }
-    } else if (aim == doTransferRight) {
-        if (CountCentre() > 0) {
-            // Aim set manually.
-            SetAction("ShieldCloseLeftII");
-        } else {
-            // The builder/s exited.
-            SetAction("ShieldCloseBoth");
-        }
-    } else if (aim == doTransferLeft) {
-        if (CountCentre() > 0) {
-            // Aim set manually.
-            SetAction("ShieldCloseRightII");
-        } else {
-            // The builder/s exited.
-            SetAction("ShieldCloseBoth");
-        }
+    } else if (aim == enterFromLeft) {
+        // When aiming at entering from the left, the right shield can be
+        // closed.
+        SetAction("ShieldCloseRightII");
+    } else if (aim == exitToRight) {
+        // When aiming at exiting to the right, the left shield can be
+        // closed.
+        SetAction("ShieldCloseLeftII");
+    } else if (aim == enterFromRight) {
+        SetAction("ShieldCloseLeftII");
+    } else if (aim == exitToLeft) {
+        SetAction("ShieldCloseRightII");
     }
 }
 
@@ -217,33 +215,36 @@ private func RunClosedBoth() {
 
     if (aim == waitForTransfer) {
         if (CountLeft() > 0 && CountRight() == 0) {
-            aim = doTransferRight;
+            aim = enterFromLeft;
         } else if (CountRight() > 0 && CountLeft() == 0) {
-            aim = doTransferLeft;
+            aim = enterFromRight;
         }
-    } else if (aim == doTransferRight) {
+    } else if (aim == enterFromLeft) {
         if (CountLeft() > 0) {
-            AttemptShieldOpenLeft(waitForTransfer);
-        } else if (CountCentre() > 0) {
-            /*
-            if (FillingDegree(centre) == 0) {
-                Suspend("ShieldOpenRight");
-            } else {
-                AttemptShieldOpenRight();
-            }
-            */
-            AttemptShieldOpenRight(waitForTransfer);
-        } else if (CountRight() == 0) {
-            // Finish doTransferRight
+            AttempShieldOpenLeft(waitForTransfer);
+        } else {
+            // There's nobody to enter from the left.
             aim = waitForTransfer;
         }
-    } else if (aim == doTransferLeft) {
+    } else if (aim == exitToRight) {
+        if (CountCentre() > 0) {
+            AttemptShieldOpenRight(waitForTransfer);
+        } else if (CountRight() == 0) {
+            // The passenger left the airlock's region.
+            aim = waitForTransfer;
+        }
+        // Otherwise (CountCentre() == 0 && CountRight() > 0) stay in the
+        // present state.
+    } else if (aim == enterFromRight) {
         if (CountRight() > 0) {
             AttemptShieldOpenRight(waitForTransfer);
-        } else if (CountCentre() > 0) {
+        } else {
+            aim = waitForTransfer;
+        }
+    } else if (aim == exitToLeft) {
+        if (CountCentre() > 0) {
             AttemptShieldOpenLeft(waitForTransfer);
         } else if (CountLeft() == 0) {
-            // finish doTransferLeft
             aim = waitForTransfer;
         }
     }
@@ -272,24 +273,44 @@ private func RunClosedLeft() {
 
     if (aim == waitForTransfer) {
         if (CountRight() > 0 && CountLeft() == 0) {
-            aim = doTransferLeft;
+            aim = enterFromRight;
         } else if (CountLeft() > 0 && CountRight() == 0) {
-            SetAction("ShieldCloseRight"); // first step
+            aim = enterFromLeft;
         }
-    } else if (aim == doTransferLeft) {
+        // Otherwise keep waiting; the user might influence the aim
+        // manually too.
+    } else if (aim == enterFromLeft) {
+        if (CountLeft() > 0) {
+            // Passengers are present.
+            SetAction("ShieldCloseRight");  // first step
+        } else {
+            // No passenger present.
+            aim = waitForTransfer;
+        }
+    } else if (aim == exitToRight) {
+        if (CountCentre() > 0) {
+            // Invite the passengers to leave the airlock.
+            SetAction("WalkRightOpenRight");
+        } else if (CountRight() == 0) {
+            // All passengers left the airlock's region.
+            aim = waitForTransfer;
+        }
+    } else if (aim == enterFromRight) {
         if (CountRight() > 0) {
+            // There are passengers, invite them.
             SetAction("WalkLeftOpenRight");
         } else if (CountCentre() > 0) {
-            SetAction("ShieldCloseRight");
+            // All passengers entered the airlock.
+            aim = exitToLeft;
         } else {
             aim = waitForTransfer;
         }
-    } else if (aim == doTransferRight) {
+    } else if (aim == exitToLeft) {
         if (CountCentre() > 0) {
-            SetAction("WalkRightOpenRight");
-        } else if (CountRight() > 0) {
+            // There are passengers.
             SetAction("ShieldCloseRight");
         } else {
+            // There are no passengers.
             aim = waitForTransfer;
         }
     }
@@ -318,24 +339,34 @@ private func RunClosedRight() {
 
     if (aim == waitForTransfer) {
         if (CountLeft() > 0 && CountRight() == 0) {
-            aim = doTransferRight;
+            aim = enterFromLeft;
         } else if (CountRight() > 0 && CountLeft() == 0) {
-            SetAction("ShieldCloseLeft"); // first step
+            aim = enterFromRight;
         }
-    } else if (aim == doTransferRight) {
+    } else if (aim == enterFromLeft) {
         if (CountLeft() > 0) {
             SetAction("WalkRightOpenLeft");
         } else if (CountCentre() > 0) {
+            aim = exitToRight;
+        } else {
+            aim = waitFortransfer;
+        }
+    } else if (aim == exitToRight) {
+        if (CountCentre() > 0) {
             SetAction("ShieldCloseLeft");
         } else {
             aim = waitForTransfer;
         }
-    } else if (aim == doTransferLeft) {
-        if (CountCentre() > 0) {
-            SetAction("WalkLeftOpenLeft");
-        } else if (CountLeft() > 0) {
+    } else if (aim == enterFromRight) {
+        if (CountRight() > 0) {
             SetAction("ShieldCloseLeft");
         } else {
+            aim = waitForTransfer;
+        }
+    } else if (aim == exitToLeft) {
+        if (CountCenter() > 0) {
+            SetAction("WalkLeftOpenLeft");
+        } else if (CountLeft() == 0) {
             aim = waitForTransfer;
         }
     }
@@ -377,30 +408,35 @@ private func PumpOut(int amount, int target) {
 // local stabilisation_countdown;
 
 protected func RunPumpLeftOut() {
-    var pumpedVolume;
-
     if (aim == beClosed) {
         SetAction("IdlingClosedBoth");
     } else if (aim == beOpenLeft) {
         SetAction("IdlingClosedBoth");
     } else if (aim == beOpenRight) {
-        pumpedVolume = PumpOut(10, left);
-        if (pumpedVolume == 0) {
+        if (PumpOut(10, left) == 0) {
             SetAction("IdlingClosedBoth");
         }
     } else if (aim == beOpen) {
         RequestOpenBoth("ShieldOpenBoth", beClosed);
     }
 
-    // In transfer mode, PumpLeftOut is always done to be able to open the
-    // right shield.
-    if (aim == doTransferLeft || aim == doTransferRight) {
-        pumpedVolume = PumpOut(10, left);
-        if (pumpedVolume == 0) {
+    if (aim == waitForTransfer) {
+        SetAction("IdlingClosedBoth");
+    } else if (aim == enterFromLeft) {
+        // There's no reason to pump to the left when aiming at entering
+        // the airlock from the left.
+        SetAction("IdlingClosedBoth");
+    } else if (aim == exitToRight) {
+        if (PumpOut(10, left) == 0) {
             SetAction("IdlingClosedBoth");
         }
-    } else if (aim == waitForTransfer) {
-        // In case the aim has been modified while pumping was in effect.
+    } else if (aim == enterFromRight) {
+        if (PumpOut(10, left) == 0) {
+            SetAction("IdlingClosedBoth");
+        }
+    } else if (aim == exitToLeft) {
+        // There's no reason to pump to the left when aiming at leaving the
+        // airlock to the left.
         SetAction("IdlingClosedBoth");
     }
 
@@ -410,25 +446,30 @@ protected func RunPumpLeftOut() {
 }
 
 protected func RunPumpRightOut() {
-    var pumpedVolume;
     if (aim == beClosed) {
         SetAction("IdlingClosedBoth");
     } else if (aim == beOpenLeft) {
-        pumpedVolume = PumpOut(10, right);
-        if (pumpedVolume == 0) {
+        if (PumpOut(10, right) == 0) {
             SetAction("IdlingClosedBoth");
         }
     } else if (aim == beOpen) {
         RequestOpenBoth("ShieldOpenBoth", beClosed);
     }
 
-    if (aim == doTransferLeft || aim == doTransferRight) {
-        pumpedVolume = PumpOut(10, right);
-        if (pumpedVolume == 0) {
+    if (aim == waitForTransfer) {
+        SetAction("IdlingClosedBoth");
+    } else if (aim == enterFromLeft) {
+        if (PumpOut(10, right) == 0) {
             SetAction("IdlingClosedBoth");
         }
-    } else if (aim == waitForTransfer) {
+    } else if (aim == exitToRight) {
         SetAction("IdlingClosedBoth");
+    } else if (aim == enterFromRight) {
+        SetAction("IdlingClosedBoth");
+    } else if (aim == exitToLeft) {
+        if (PumpOut(10, right) == 0) {
+            SetAction("IdlingClosedBoth");
+        }
     }
 
     if (mode == forced) {
@@ -440,20 +481,24 @@ protected func RunPumpLeftIn() { }
 protected func RunPumpRightIn() { }
 
 protected func RunWalkRightOpenLeft() {
-    if (CountLeft() == 0) { SetAction("IdlingClosedRight"); }
-    if (aim != doTransferRight) { SetAction("IdlingClosedRight"); }
+    if (aim != enterFromLeft || CountLeft() == 0) {
+        SetAction("IdlingClosedRight");
+    }
 }
 protected func RunWalkRightOpenRight() {
-    if (CountCentre() == 0) { SetAction("IdlingClosedLeft"); }
-    if (aim != doTransferRight) { SetAction("IdlingClosedLeft"); }
+    if (aim != exitToRight || CountCentre() == 0) {
+        SetAction("IdlingClosedLeft");
+    }
 }
 protected func RunWalkLeftOpenLeft() {
-    if (CountCentre() == 0 ) { SetAction("IdlingClosedRight"); }
-    if (aim != doTransferLeft) { SetAction("IdlingClosedRight"); }
+    if (aim != exitToLeft || CountCentre() == 0) {
+        SetAction("IdlingClosedRight");
+    }
 }
 protected func RunWalkLeftOpenRight() {
-    if (CountRight() == 0) { SetAction("IdlingClosedLeft"); }
-    if (aim != doTransferLeft) { SetAction("IdlingClosedLeft"); }
+    if (aim != enterFromRight || CountRight() == 0) {
+        SetAction("IdlingClosedLeft");
+    }
 }
 
 /*
@@ -510,9 +555,11 @@ protected func Initialize() {
     beForcedOpenRight = 9;
     beForcedOpen = 10;
 
-    doTransferRight = 14;
-    doTransferLeft = 12;
     waitForTransfer = 13;
+    enterFromLeft = 15;
+    exitToRight = 16;
+    enterFromRight = 17;
+    exitToLeft = 18;
 
     cautious = 1;
     forced = 2;
@@ -530,7 +577,18 @@ protected func ControlLeft(object pCaller) {
         AddMenuItem("Links offen", "ControlOpenLeft", ALCK, pCaller);
         AddMenuItem("Links geschlossen", "ControlCloseLeft", ALCK, pCaller);
     } else if (mode == transfer) {
-        aim = doTransferLeft;
+        if (CountRight() > 0) {
+            aim = enterFromRight;
+        } else {
+            // We can skip the case that *no* passenger is present since
+            // someone actually issued this callback.
+            aim = exitToLeft;
+            // In case of exit via the left shield, it will be attempted to
+            // be opened.  When about to leave the airlock's region to the
+            // left, nothing will be done.  The latter case is especially
+            // useful when the airlock shall not open the left shield,
+            // assuming that the passenger requests transfer.
+        }
     }
 }
 
@@ -540,7 +598,11 @@ protected func ControlRight(object pCaller) {
         AddMenuItem("Rechts offen", "ControlOpenRight", ALCK, pCaller);
         AddMenuItem("Rechts geschlossen", "ControlCloseRight", ALCK, pCaller);
     } else if (mode == transfer) {
-        aim = doTransferRight;
+        if (CountLeft() > 0) {
+            aim = enterFromLeft;
+        } else {
+            aim = exitToRight;
+        }
     }
 }
 
@@ -550,6 +612,7 @@ protected func ControlUp(object pCaller) {
         AddMenuItem("Beide Seiten offen", "ControlOpenBoth", ALCK, pCaller);
         AddMenuItem("Beide Seiten geschlossen", "ControlCloseBoth", ALCK, pCaller);
     } else if (mode == transfer) {
+        // This can be used to cancel all transfer currently in operation.
         aim = waitForTransfer;
     }
 }
