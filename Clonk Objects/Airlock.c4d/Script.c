@@ -134,10 +134,10 @@ private func RunOpenedBoth() {
         // nothing to do
     }
 
-    // in transfer mode, we need to leave the OpenedBoth state.
+    // in transfer mode, we need to leave the IdlingOpenedBoth Action.
     if (aim == waitForTransfer) {
-        // In OpenedBoth state, we wait for the clonk/s which built the
-        // AirLock to exit on one of the two sides.
+        // In the IdlingOpenedBoth Action, we wait for the clonk/s which
+        // built the AirLock to exit on one of the two sides.
         if (CountCentre() == 0) {
             if (CountRight() > 0 && CountLeft() == 0) {
                 // Let the clonks exit to the right.
@@ -172,7 +172,7 @@ private func AttemptShieldOpenLeft(int impossibleAim) {
         if (FillingDegree(right) > 0) {
             SetAction("PumpRightOut");
         } else {
-            Message("Beide Seiten sind trocken");
+            Message("Beide Seiten sind trocken", this);
             aim = impossibleAim;
         }
     }
@@ -186,7 +186,7 @@ private func AttemptShieldOpenRight(int impossibleAim) {
         if (FillingDegree(left) > 0) {
             SetAction("PumpLeftOut");
         } else {
-            Message("Beide Seiten sind trocken");
+            Message("Beide Seiten sind trocken", this);
             aim = impossibleAim;
         }
     }
@@ -221,7 +221,14 @@ private func RunClosedBoth() {
         }
     } else if (aim == enterFromLeft) {
         if (CountLeft() > 0) {
-            AttempShieldOpenLeft(waitForTransfer);
+            AttempShieldOpenLeft(exitToLeft);
+                // When opening the shield isn't possible, there's no use
+                // in setting the waitForTransfer aim, as the airlock would
+                // directly return to the enterFromLeft aim.  Instead,
+                // exitToLeft says what's necessary: The passengers cannot
+                // enter and should leave the airlock's region.
+        } else if (CountCentre() > 0) {
+            aim = exitToRight;
         } else {
             // There's nobody to enter from the left.
             aim = waitForTransfer;
@@ -229,15 +236,18 @@ private func RunClosedBoth() {
     } else if (aim == exitToRight) {
         if (CountCentre() > 0) {
             AttemptShieldOpenRight(waitForTransfer);
+                // The waitForTransfer aim will be "stable".
         } else if (CountRight() == 0) {
             // The passenger left the airlock's region.
             aim = waitForTransfer;
         }
-        // Otherwise (CountCentre() == 0 && CountRight() > 0) stay in the
-        // present state.
+        // Otherwise (when CountCentre() == 0 && CountRight() > 0), do not
+        // change the aim.
     } else if (aim == enterFromRight) {
         if (CountRight() > 0) {
-            AttemptShieldOpenRight(waitForTransfer);
+            AttemptShieldOpenRight(exitToRight);
+        } else if (CountCentre() > 0) {
+            aim = exitToLeft;
         } else {
             aim = waitForTransfer;
         }
@@ -283,6 +293,9 @@ private func RunClosedLeft() {
         if (CountLeft() > 0) {
             // Passengers are present.
             SetAction("ShieldCloseRight");  // first step
+        } else if (CountCentre() > 0) {
+            // There are passengers inside; let them exit.
+            aim = exitToRight;
         } else {
             // No passenger present.
             aim = waitForTransfer;
@@ -309,10 +322,11 @@ private func RunClosedLeft() {
         if (CountCentre() > 0) {
             // There are passengers.
             SetAction("ShieldCloseRight");
-        } else {
+        } else if (CountLeft() == 0) {
             // There are no passengers.
             aim = waitForTransfer;
         }
+        // Else, there are passengers in the left region, let them exit.
     }
 }
 
@@ -349,22 +363,24 @@ private func RunClosedRight() {
         } else if (CountCentre() > 0) {
             aim = exitToRight;
         } else {
-            aim = waitFortransfer;
+            aim = waitForTransfer;
         }
     } else if (aim == exitToRight) {
         if (CountCentre() > 0) {
             SetAction("ShieldCloseLeft");
-        } else {
+        } else if (CountRight() == 0) {
             aim = waitForTransfer;
         }
     } else if (aim == enterFromRight) {
         if (CountRight() > 0) {
             SetAction("ShieldCloseLeft");
+        } else if (CountCentre() > 0) {
+            aim = exitToLeft;
         } else {
             aim = waitForTransfer;
         }
     } else if (aim == exitToLeft) {
-        if (CountCenter() > 0) {
+        if (CountCentre() > 0) {
             SetAction("WalkLeftOpenLeft");
         } else if (CountLeft() == 0) {
             aim = waitForTransfer;
