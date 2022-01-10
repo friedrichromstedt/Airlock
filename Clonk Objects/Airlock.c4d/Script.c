@@ -221,7 +221,7 @@ private func RunClosedBoth() {
         }
     } else if (aim == enterFromLeft) {
         if (CountLeft() > 0) {
-            AttempShieldOpenLeft(exitToLeft);
+            AttemptShieldOpenLeft(exitToLeft);
                 // When opening the shield isn't possible, there's no use
                 // in setting the waitForTransfer aim, as the airlock would
                 // directly return to the enterFromLeft aim.  Instead,
