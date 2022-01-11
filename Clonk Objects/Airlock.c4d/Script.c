@@ -304,7 +304,12 @@ private func RunClosedLeft() {
         if (CountCentre() > 0) {
             // Invite the passengers to leave the airlock.
             SetAction("WalkRightOpenRight");
-        } else if (CountRight() == 0) {
+        } else if (CountRight() > 0) {
+            // We have an open right shield, display the Walk animation for
+            // the passengers leaving in the right region.
+            SetAction("WalkRightOpenRight");
+        } else {
+            // CountCentre() == 0 and CountRight() == 0.
             // All passengers left the airlock's region.
             aim = waitForTransfer;
         }
@@ -322,11 +327,15 @@ private func RunClosedLeft() {
         if (CountCentre() > 0) {
             // There are passengers.
             SetAction("ShieldCloseRight");
-        } else if (CountLeft() == 0) {
+        } else if (CountLeft() > 0) {
+            // This should be rare, but if it occurs, closing the right
+            // shield s.t. the left shield can be opened is probably the
+            // Right Thing (TM).
+            SetAction("ShieldCloseRight");
+        } else {
             // There are no passengers.
             aim = waitForTransfer;
         }
-        // Else, there are passengers in the left region, let them exit.
     }
 }
 
@@ -368,7 +377,9 @@ private func RunClosedRight() {
     } else if (aim == exitToRight) {
         if (CountCentre() > 0) {
             SetAction("ShieldCloseLeft");
-        } else if (CountRight() == 0) {
+        } else if (CountRight() > 0) {
+            SetAction("ShieldCloseLeft");
+        } else {
             aim = waitForTransfer;
         }
     } else if (aim == enterFromRight) {
@@ -382,7 +393,9 @@ private func RunClosedRight() {
     } else if (aim == exitToLeft) {
         if (CountCentre() > 0) {
             SetAction("WalkLeftOpenLeft");
-        } else if (CountLeft() == 0) {
+        } else if (CountLeft() > 0) {
+            SetAction("WalkLeftOpenLeft");
+        } else {
             aim = waitForTransfer;
         }
     }
@@ -502,12 +515,14 @@ protected func RunWalkRightOpenLeft() {
     }
 }
 protected func RunWalkRightOpenRight() {
-    if (aim != exitToRight || CountCentre() == 0) {
+    if (aim != exitToRight || 
+            (CountCentre() == 0 && CountRight() == 0)) {
         SetAction("IdlingClosedLeft");
     }
 }
 protected func RunWalkLeftOpenLeft() {
-    if (aim != exitToLeft || CountCentre() == 0) {
+    if (aim != exitToLeft || 
+            (CountCentre() == 0 && CountLeft() == 0)) {
         SetAction("IdlingClosedRight");
     }
 }
