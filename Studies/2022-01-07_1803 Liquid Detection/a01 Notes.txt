@@ -1,3 +1,8 @@
+.. vim: syntax=rst
+
+Detection of Liquids in the Centre Region
+=========================================
+
 Leftmost point of floor (right edge of the left shield)::
 
     18 px
@@ -8,3 +13,34 @@ Rightmost point ot floor (left egde of the right shield)::
 
 The floor is hence (154 - 18 + 1) px = 137 px wide.  Its maximum offset x
 coordinates are hence +- (137 - 1) / 2 = +- 68 px.
+
+
+Detection of Liquids for Dry Pumping
+====================================
+
+Total width::
+
+    173 px
+
+Left dry pumping source region::
+
+    0 px .. 154 px = (77 +- 77) px
+
+relative to the centre at index ``(173 + 1) px / 2 = 86 px``::
+
+    (77 - 86 +- 77) px = (-9 +- 77) px
+
+Crosscheck for left edge::
+
+    -9 px - 77 px = -86 px
+
+This is correct.  Right edge::
+
+    -9 px + 77 px = 68 px (relative)
+    68 px + 86 px = 154 px (absolute)
+
+This is correct as well [:12].
+
+For the right dry-pumping region the coordinates are just flipped [:31]:
+
+    (+9 +- 77) px

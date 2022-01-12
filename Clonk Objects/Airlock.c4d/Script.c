@@ -7,6 +7,7 @@ local leftROIx, leftROIwidth;
 local rightROIx, rightROIwidth;
 
 local maxFloorXOffset;
+local dryPumpingXCentre, maxDryPumpingXOffset;
 
 local aim;
     local beClosed, beOpenLeft, beOpenRight, beOpen,
@@ -42,9 +43,10 @@ private func FillingDegree(int x) {
     }
 }
 
-private func FirstWetOffset() {
-    for (var xoffset = 0; xoffset <= maxFloorXOffset; ++xoffset) {
-        if (FillingDegree(xoffset) > 0 || FillingDegree(-xoffset) > 0) {
+private func FirstWetOffset(centre, maxoffset) {
+    for (var xoffset = 0; xoffset <= maxoffset; ++xoffset) {
+        if (FillingDegree(centre - xoffset) > 0 || 
+                FillingDegree(centre + xoffset) > 0) {
             return(xoffset);
         }
     }
@@ -413,11 +415,12 @@ private func PumpOnePxLeftOut(int x) {
 }
 */
 
-private func PumpOut(int amount, int target) {
+private func PumpOut(int amount, int target,
+        int xcentre, int maxxoffset) {
     // *target* is the x position of the outlet.
     var xoffset = 0, material, pumpedVolume = 0;
     for (var i = 0; i < amount; i++) {
-        xoffset = FirstWetOffset();
+        xoffset = FirstWetOffset(xcentre, maxxoffset);
         if (xoffset != -1) {
             if (FillingDegree(xoffset) > 0) {
                 material = ExtractLiquid(xoffset, bottom);
@@ -434,6 +437,24 @@ private func PumpOut(int amount, int target) {
     return(pumpedVolume);
 }
 
+private func PumpOutLeft(int amount) {
+    return(PumpOut(amount, left, 0, maxFloorXOffset));
+}
+
+private func PumpOutRight(int amount) {
+    return(PumpOut(amount, right, 0, maxFloorXOffset));
+}
+
+private func DryPumpOutLeft(int amount) {
+    return(PumpOut(amount, left,
+        dryPumpingXCentre, maxDryPumpingXOffset));
+}
+
+private func DryPumpOutRight(int amount) {
+    return(PumpOut(amount, right,
+        -dryPumpingXCentre, maxDryPumpingXOffset));
+}
+
 // local stabilisation_countdown;
 
 protected func RunPumpLeftOut() {
@@ -442,7 +463,7 @@ protected func RunPumpLeftOut() {
     } else if (aim == beOpenLeft) {
         SetAction("IdlingClosedBoth");
     } else if (aim == beOpenRight) {
-        if (PumpOut(10, left) == 0) {
+        if (PumpOutLeft(10) == 0) {
             SetAction("IdlingClosedBoth");
         }
     } else if (aim == beOpen) {
@@ -456,11 +477,11 @@ protected func RunPumpLeftOut() {
         // the airlock from the left.
         SetAction("IdlingClosedBoth");
     } else if (aim == exitToRight) {
-        if (PumpOut(10, left) == 0) {
+        if (PumpOutLeft(10) == 0) {
             SetAction("IdlingClosedBoth");
         }
     } else if (aim == enterFromRight) {
-        if (PumpOut(10, left) == 0) {
+        if (PumpOutLeft(10) == 0) {
             SetAction("IdlingClosedBoth");
         }
     } else if (aim == exitToLeft) {
@@ -478,7 +499,7 @@ protected func RunPumpRightOut() {
     if (aim == beClosed) {
         SetAction("IdlingClosedBoth");
     } else if (aim == beOpenLeft) {
-        if (PumpOut(10, right) == 0) {
+        if (PumpOutRight(10) == 0) {
             SetAction("IdlingClosedBoth");
         }
     } else if (aim == beOpen) {
@@ -488,7 +509,7 @@ protected func RunPumpRightOut() {
     if (aim == waitForTransfer) {
         SetAction("IdlingClosedBoth");
     } else if (aim == enterFromLeft) {
-        if (PumpOut(10, right) == 0) {
+        if (PumpOutRight(10) == 0) {
             SetAction("IdlingClosedBoth");
         }
     } else if (aim == exitToRight) {
@@ -496,7 +517,7 @@ protected func RunPumpRightOut() {
     } else if (aim == enterFromRight) {
         SetAction("IdlingClosedBoth");
     } else if (aim == exitToLeft) {
-        if (PumpOut(10, right) == 0) {
+        if (PumpOutRight(10) == 0) {
             SetAction("IdlingClosedBoth");
         }
     }
@@ -572,6 +593,9 @@ protected func Initialize() {
     rightROIwidth = 50;
 
     maxFloorXOffset = 68;
+
+    dryPumpingXCentre = 9;
+    maxDryPumpingXOffset = 77;
 
     beClosed = 1;
     beOpenLeft = 2;
