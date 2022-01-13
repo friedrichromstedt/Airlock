@@ -594,8 +594,8 @@ protected func Initialize() {
 
     maxFloorXOffset = 68;
 
-    dryPumpingXCentre = 9;
-    maxDryPumpingXOffset = 77;
+    dryPumpingXCentre = 14;
+    maxDryPumpingXOffset = 82;
 
     beClosed = 1;
     beOpenLeft = 2;

@@ -44,3 +44,16 @@ This is correct as well [:12].
 For the right dry-pumping region the coordinates are just flipped [:31]:
 
     (+9 +- 77) px
+
+
+.. rubric:: Thursday, 13 January 2021
+
+
+The outlet position at the left/right end are close to the edge of the
+airlock.  Therefore increasing the search margins by 10 px::
+
+    (-14 +- 82) px
+    (+14 +- 82) px
+
+Both the offset as well as the width changed by 5 px.  This pushes out the
+outer end of the resp. search region by 10 px.
