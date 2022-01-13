@@ -14,7 +14,7 @@ local aim;
         beForcedClosed, beForcedOpenLeft, beForcedOpenRight, beForcedOpen;
     local waitForTransfer,
         enterFromLeft, exitToRight, enterFromRight, exitToLeft;
-    local doDryPumpingLeft, doDryPumpingRight;
+    local idleDryPumping, doDryPumpingLeft, doDryPumpingRight;
 
 local mode;
     local cautious, forced, transfer, drypumping;
@@ -164,6 +164,14 @@ private func RunOpenedBoth() {
     } else if (aim == exitToLeft) {
         SetAction("ShieldCloseRightII");
     }
+
+    if (aim == idleDryPumping) {
+        // nothing to do
+    } else if (aim == doDryPumpingLeft) {
+        SetAction("ShieldCloseLeftII");
+    } else if (aim == doDryPumpingRight) {
+        SetAction("ShieldCloseRightII");
+    }
 }
 
 private func AttemptShieldOpenLeft(int impossibleAim) {
@@ -260,6 +268,14 @@ private func RunClosedBoth() {
             aim = waitForTransfer;
         }
     }
+
+    if (aim == idleDryPumping) {
+        // nothing to do
+    } else if (aim == doDryPumpingLeft) {
+        AttemptShieldOpenRight(idleDryPumping);
+    } else if (aim == doDryPumpingRight) {
+        AttemptShieldOpenLeft(idleDryPumping);
+    }
 }
 
 private func RunClosedLeft() {
@@ -339,6 +355,14 @@ private func RunClosedLeft() {
             aim = waitForTransfer;
         }
     }
+
+    if (aim == idleDryPumping) {
+        // nothing to do
+    } else if (aim == doDryPumpingLeft) {
+        SetAction("DryPumpingLeft");
+    } else if (aim == doDryPumpingRight) {
+        SetAction("ShieldCloseRight");  // first step
+    }
 }
 
 private func RunClosedRight() {
@@ -401,6 +425,14 @@ private func RunClosedRight() {
             aim = waitForTransfer;
         }
     }
+
+    if (aim == idleDryPumping) {
+        // nothing to do
+    } else if (aim == doDryPumpingLeft) {
+        SetAction("ShieldCloseLeft"); // first step
+    } else if (aim == doDryPumpingRight) {
+        SetAction("DryPumpingRight");
+    }
 }
 
 /*
@@ -422,13 +454,13 @@ private func PumpOut(int amount, int target,
     for (var i = 0; i < amount; i++) {
         xoffset = FirstWetOffset(xcentre, maxxoffset);
         if (xoffset != -1) {
-            if (FillingDegree(xoffset) > 0) {
-                material = ExtractLiquid(xoffset, bottom);
+            if (FillingDegree(xcentre + xoffset) > 0) {
+                material = ExtractLiquid(xcentre + xoffset, bottom);
                 InsertMaterial(material, target, top);
                 pumpedVolume += 1;
             }
-            if (FillingDegree(-xoffset) > 0) {
-                material = ExtractLiquid(-xoffset, bottom);
+            if (FillingDegree(xcentre - xoffset) > 0) {
+                material = ExtractLiquid(xcentre - xoffset, bottom);
                 InsertMaterial(material, target, top);
                 pumpedVolume += 1;
             }
@@ -553,6 +585,22 @@ protected func RunWalkLeftOpenRight() {
     }
 }
 
+protected func RunDryPumpingLeft() {
+    if (aim != doDryPumpingLeft) {
+        SetAction("IdlingClosedLeft");
+    } else if (DryPumpOutLeft(10) == 0) {
+        aim = idleDryPumping;
+    }
+}
+
+protected func RunDryPumpingRight() {
+    if (aim != doDryPumpingRight) {
+        SetAction("IdlingClosedRight");
+    } else if (DryPumpOutRight(10) == 0) {
+        aim = idleDryPumping;
+    }
+}
+
 /*
 protected func EndCallFunction() {
     if (aim == beForcedClosed) {
@@ -604,6 +652,7 @@ protected func Initialize() {
 
     doDryPumpingLeft = 6;
     doDryPumpingRight = 7;
+    idleDryPumping = 19;
 
     beForcedClosed = 11;
     beForcedOpenLeft = 8;
@@ -644,6 +693,8 @@ protected func ControlLeft(object pCaller) {
             // useful when the airlock shall not open the left shield,
             // assuming that the passenger requests transfer.
         }
+    } else if (mode == drypumping) {
+        aim = doDryPumpingLeft;
     }
 }
 
@@ -658,6 +709,8 @@ protected func ControlRight(object pCaller) {
         } else {
             aim = exitToRight;
         }
+    } else if (mode == drypumping) {
+        aim = doDryPumpingRight;
     }
 }
 
@@ -669,6 +722,8 @@ protected func ControlUp(object pCaller) {
     } else if (mode == transfer) {
         // This can be used to cancel all transfer currently in operation.
         aim = waitForTransfer;
+    } else if (mode == drypumping) {
+        aim = idleDryPumping;
     }
 }
 
@@ -677,7 +732,7 @@ protected func ControlDig(object pCaller) {
     AddMenuItem("Vorsichtig", "ControlModeCautious", ALCK, pCaller);
     AddMenuItem("Forciert", "ControlModeForced", ALCK, pCaller);
     AddMenuItem("Transfer", "ControlModeTransfer", ALCK, pCaller);
-    // AddMenuItem("Trockenpumpen", "ControlModeDrypumping", ALCK, pCaller);
+    AddMenuItem("Trockenpumpen", "ControlModeDrypumping", ALCK, pCaller);
 }
 
 protected func ControlOpenLeft() {
@@ -753,8 +808,25 @@ protected func ControlModeCautious() {
         else if (aim == beForcedOpenRight) { aim = beOpenRight; }
         else if (aim == beForcedOpen) { aim = beOpen; }
     } else if (mode == transfer) {
-        aim = beClosed;
+        if (aim == waitForTransfer) {
+            aim = beClosed;
+        } else if (aim == enterFromLeft) {
+            aim = beOpenLeft;
+        } else if (aim == exitToRight) {
+            aim = beOpenRight;
+        } else if (aim == enterFromRight) {
+            aim = beOpenRight;
+        } else if (aim == exitToLeft) {
+            aim = beOpenLeft;
+        }
     } else if (mode == drypumping) {
+        if (aim == idleDryPumping) {
+            aim = beClosed;
+        } else if (aim == doDryPumpingLeft) {
+            aim = beOpenRight;
+        } else if (aim == doDryPumpingRight) {
+            aim = beOpenLeft;
+        }
     }
     mode = cautious;
 }
@@ -766,10 +838,32 @@ protected func ControlModeForced() {
         else if (aim == beOpenRight) { aim = beForcedOpenRight; }
         else if (aim == beOpen) { aim = beForcedOpen; }
     } else if (mode == transfer) {
-        aim = beForcedClosed;
+        if (aim == waitForTransfer) {
+            aim = beForcedClosed;
+        } else if (aim == enterFromLeft) {
+            aim = beForcedOpenLeft;
+        } else if (aim == exitToRight) {
+            aim = beForcedOpenRight;
+        } else if (aim == enterFromRight) {
+            aim = beForcedOpenRight;
+        } else if (aim == exitToLeft) {
+            aim = beForcedOpenLeft;
+        }
     } else if (mode == drypumping) {
+        if (aim == idleDryPumping) {
+            aim = beForcedClosed;
+        } else if (aim == doDryPumpingLeft) {
+            aim = beForcedOpenRight;
+        } else if (aim == doDryPumpingRight) {
+            aim = beForcedOpenLeft;
+        }
     }
     mode = forced;
+}
+
+protected func ControlModeDrypumping() {
+    aim = idleDryPumping;
+    mode = drypumping;
 }
 
 protected func ControlModeTransfer() {

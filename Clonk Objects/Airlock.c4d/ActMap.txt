@@ -194,6 +194,7 @@ Name=DryPumpingLeft
 Length=10
 Delay=1
 Facet=0,312,173,26,0,-2
+PhaseCall=RunDryPumpingLeft
 NextAction=DryPumpingLeft
 
 [Action]
@@ -201,6 +202,7 @@ Name=DryPumpingRight
 Length=10
 Delay=1
 Facet=0,338,173,26,0,-2
+PhaseCall=RunDryPumpingRight
 NextAction=DryPumpingRight
 
 
