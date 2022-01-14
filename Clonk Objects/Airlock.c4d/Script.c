@@ -19,17 +19,6 @@ local aim;
 local mode;
     local cautious, forced, transfer, drypumping;
 
-local actionAfterWaiting;
-
-private func Suspend(string resume_action) {
-    actionAfterWaiting = resume_action;
-    SetAction("Waiting");
-    Log("Waiting");
-}
-
-protected func Resume() {
-    SetAction(actionAfterWaiting);
-}
 
 private func FillingDegree(int x) {
     if (GBackLiquid(x, top)) {
@@ -52,17 +41,6 @@ private func FirstWetOffset(centre, maxoffset) {
     }
     return(-1);
 }
-
-/*
-private func getMaterial(int x) {
-    if (GBackLiquid(x, top)) {
-        return(GetMaterial(x, top));
-    } else if (GBackLiquid(x, bottom)) {
-        return(GetMaterial(x, bottom));
-    }
-    return(-1);
-}
-*/
 
 private func CountLeft() {
     return ObjectCount2(
@@ -95,8 +73,6 @@ private func RequestOpenBoth(string action, int alt_aim) {
     }
 }
 
-// local lastFillingDegree;
-
 protected func Run() {
     var current_action = GetAction();
 
@@ -104,15 +80,6 @@ protected func Run() {
     else if (current_action == "IdlingClosedBoth") { RunClosedBoth(); }
     else if (current_action == "IdlingClosedLeft") { RunClosedLeft(); }
     else if (current_action == "IdlingClosedRight") { RunClosedRight(); }
-
-    /*
-    var filling_degree = FillingDegree(centre);
-    if (filling_degree != lastFillingDegree) {
-        Log("%d: FillingDegree(centre) now %d (%s)",
-            FrameCounter(), filling_degree, current_action);
-    }
-    lastFillingDegree = filling_degree;
-    */
 }
 
 private func RunOpenedBoth() {
@@ -192,7 +159,6 @@ private func AttemptShieldOpenRight(int impossibleAim) {
     if (FillingDegree(centre) == 0 || FillingDegree(right) > 0) {
         SetAction("ShieldOpenRight");
     } else {
-        // Log("FillingDegree(centre) = %d", FillingDegree(centre));
         if (FillingDegree(left) > 0) {
             SetAction("PumpLeftOut");
         } else {
@@ -434,18 +400,6 @@ private func RunClosedRight() {
     }
 }
 
-/*
-private func PumpOnePxLeftOut(int x) {
-    var material = ExtractLiquid(x, bottom);
-    if (material != -1) {
-        InsertMaterial(material, left, top);
-        return(1);
-    } else {
-        return(0);
-    }
-}
-*/
-
 private func PumpOut(int amount, int target,
         int xcentre, int maxxoffset) {
     // *target* is the x position of the outlet.
@@ -485,8 +439,6 @@ private func DryPumpOutRight(int amount) {
     return(PumpOut(amount, right,
         -dryPumpingXCentre, maxDryPumpingXOffset));
 }
-
-// local stabilisation_countdown;
 
 protected func RunPumpLeftOut() {
     if (aim == beClosed) {
@@ -567,9 +519,6 @@ protected func RunPumpRightOut() {
     }
 }
 
-protected func RunPumpLeftIn() { }
-protected func RunPumpRightIn() { }
-
 protected func RunWalkRightOpenLeft() {
     if (aim != enterFromLeft || CountLeft() == 0) {
         SetAction("IdlingClosedRight");
@@ -608,20 +557,6 @@ protected func RunDryPumpingRight() {
         aim = idleDryPumping;
     }
 }
-
-/*
-protected func EndCallFunction() {
-    if (aim == beForcedClosed) {
-        SetAction("");
-    } else if (aim == beForcedOpenLeft) {
-        SetAction("");
-    } else if (aim == beForcedOpenRight) {
-        SetAction("");
-    } else if (aim == beForcedOpen) {
-        SetAction("");
-    }
-}
-*/
 
 protected func Initialize() {
     top = -9;
@@ -880,21 +815,17 @@ protected func ControlModeTransfer() {
 }
 
 protected func SolidMaskClosedBoth() {
-    // Log("both closed");
     SetSolidMask(0, 52, 173, 26, 0, -2);
 }
 
 protected func SolidMaskOpenedBoth() {
-    // Log("both opened");
     SetSolidMask(0, 130, 173, 26, 0, -2);
 }
 
 protected func SolidMaskClosedLeft() {
-    // Log("left closed, right open");
     SetSolidMask(0, 78, 173, 26, 0, -2);
 }
 
 protected func SolidMaskClosedRight() {
-    // Log("left open, right closed");
     SetSolidMask(0, 104, 173, 26, 0, -2);
 }

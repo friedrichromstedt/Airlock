@@ -37,32 +37,12 @@ PhaseCall=RunPumpLeftOut
 NextAction=PumpLeftOut
 
 [Action]
-Name=PumpLeftIn
-Length=10
-Delay=1
-Facet=0,156,173,26,0,-2
-Reverse=1
-PhaseCall=RunPumpLeftIn
-NextAction=PumpLeftIn
-
-
-
-[Action]
 Name=PumpRightOut
 Length=10
 Delay=1
 Facet=0,182,173,26,0,-2
 PhaseCall=RunPumpRightOut
 NextAction=PumpRightOut
-
-[Action]
-Name=PumpRightIn
-Length=10
-Delay=1
-Facet=0,182,173,26,0,-2
-Reverse=1
-PhaseCall=RunPumpRightIn
-NextAction=PumpRightIn
 
 
 
@@ -204,11 +184,3 @@ Delay=1
 Facet=0,338,173,26,0,-2
 PhaseCall=RunDryPumpingRight
 NextAction=DryPumpingRight
-
-
-[Action]
-Name=Waiting
-Length=1
-Delay=100
-Facet=0,26,173,26,0,-2
-EndCall=Resume
