@@ -1,5 +1,7 @@
 #strict 2
 
+// Version: 1.0.0
+
 local top, bottom, left, right, centre, height;
 
 local centreROIx, centreROIwidth;
