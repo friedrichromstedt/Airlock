@@ -346,10 +346,9 @@ private func RunClosedLeft() {
             // There are passengers.
             SetAction("ShieldCloseRight");
         } else if (CountLeft() > 0) {
-            // This should be rare, but if it occurs, closing the right
-            // shield s.t. the left shield can be opened is probably the
-            // Right Thing (TM).
-            SetAction("ShieldCloseRight");
+            // There are no Clonks in the centre region, but there are
+            // passengers exiting in the left region, so there is nothing
+            // to do.
         } else {
             // There are no passengers.
             aim = waitForTransfer;
@@ -404,7 +403,7 @@ private func RunClosedRight() {
         if (CountCentre() > 0) {
             SetAction("ShieldCloseLeft");
         } else if (CountRight() > 0) {
-            SetAction("ShieldCloseLeft");
+            // nothing to do
         } else {
             aim = waitForTransfer;
         }
@@ -502,6 +501,10 @@ protected func RunPumpLeftOut() {
         RequestOpenBoth("ShieldOpenBoth", beClosed);
     }
 
+    if (mode == forced) {
+        SetAction("IdlingClosedBoth");
+    }
+
     if (aim == waitForTransfer) {
         SetAction("IdlingClosedBoth");
     } else if (aim == enterFromLeft) {
@@ -522,7 +525,8 @@ protected func RunPumpLeftOut() {
         SetAction("IdlingClosedBoth");
     }
 
-    if (mode == forced) {
+    if (mode == drypumping) {
+        // PumpOutLeft is not part of the drypumping mode.
         SetAction("IdlingClosedBoth");
     }
 }
@@ -536,6 +540,10 @@ protected func RunPumpRightOut() {
         }
     } else if (aim == beOpen) {
         RequestOpenBoth("ShieldOpenBoth", beClosed);
+    }
+
+    if (mode == forced) {
+        SetAction("IdlingClosedBoth");
     }
 
     if (aim == waitForTransfer) {
@@ -554,7 +562,7 @@ protected func RunPumpRightOut() {
         }
     }
 
-    if (mode == forced) {
+    if (mode == drypumping) {
         SetAction("IdlingClosedBoth");
     }
 }
@@ -720,7 +728,7 @@ protected func ControlUp(object pCaller) {
         AddMenuItem("Beide Seiten offen", "ControlOpenBoth", ALCK, pCaller);
         AddMenuItem("Beide Seiten geschlossen", "ControlCloseBoth", ALCK, pCaller);
     } else if (mode == transfer) {
-        // This can be used to cancel all transfer currently in operation.
+        // This can be used to cancel any transfer currently in operation.
         aim = waitForTransfer;
     } else if (mode == drypumping) {
         aim = idleDryPumping;
